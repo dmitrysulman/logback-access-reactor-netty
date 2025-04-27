@@ -6,7 +6,6 @@ import ch.qos.logback.core.joran.spi.JoranException
 import reactor.netty.http.server.logging.AccessLogArgProvider
 import reactor.netty.http.server.logging.AccessLogFactory
 import java.net.URL
-import reactor.netty.http.server.logging.AccessLog as ReactorAccessLog
 
 abstract class AbstractAccessLogFactory(
     joranConfigurator: JoranConfigurator,
