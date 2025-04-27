@@ -1,7 +1,6 @@
 package io.dmitrysulman.logback.access.reactor.netty
 
 import ch.qos.logback.access.common.spi.AccessContext
-import ch.qos.logback.access.common.spi.AccessEvent
 import reactor.netty.http.server.logging.AccessLogArgProvider
 import reactor.netty.http.server.logging.AccessLog as ReactorAccessLog
 
@@ -10,15 +9,11 @@ class AccessLog(
     argProvider: AccessLogArgProvider
 ) : ReactorAccessLog("") {
 
-    private val accessEvent = AccessEvent(
-        accessContext,
-        HttpServletRequestAdapter(argProvider),
-        HttpServletResponseAdapter(argProvider),
-        ReactorNettyServerAdapter(argProvider)
-    )
+    private val accessEvent = AccessEvent(argProvider, accessContext)
 
     override fun log() {
-        // TODO elapsedTime and seconds
+        // TODO add something to status manager?
+        accessEvent.threadName = Thread.currentThread().name
         accessContext.callAppenders(accessEvent)
     }
 }

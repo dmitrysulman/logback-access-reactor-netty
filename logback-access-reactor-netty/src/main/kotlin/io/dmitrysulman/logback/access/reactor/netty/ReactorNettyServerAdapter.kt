@@ -6,19 +6,11 @@ import reactor.netty.http.server.logging.AccessLogArgProvider
 class ReactorNettyServerAdapter(
     private val argProvider: AccessLogArgProvider
 ) : ServerAdapter {
-    override fun getRequestTimestamp(): Long {
-        return argProvider.accessDateTime()?.toInstant()?.toEpochMilli() ?: System.currentTimeMillis()
-    }
+    override fun getRequestTimestamp() = argProvider.accessDateTime()?.toInstant()?.toEpochMilli() ?: 0
 
-    override fun getContentLength(): Long {
-        return argProvider.contentLength()
-    }
+    override fun getContentLength() = argProvider.contentLength()
 
-    override fun getStatusCode(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getStatusCode() = argProvider.status()?.toString()?.toIntOrNull() ?: -1
 
-    override fun buildResponseHeaderMap(): MutableMap<String, String> {
-        TODO("Not yet implemented")
-    }
+    override fun buildResponseHeaderMap() = HeaderMapAdapter { argProvider.responseHeader(it)?.toString() }
 }

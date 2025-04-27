@@ -15,15 +15,17 @@ abstract class AbstractAccessLogFactory(
     private val accessContext = AccessContext()
     init {
         try {
+            // TODO add status manager (+ addInfo/addError where needed in this and other classes)
+            // TODO add error handling everywhere
             joranConfigurator.context = accessContext
             joranConfigurator.doConfigure(config)
+            // TODO stop context in the end?
+            accessContext.start()
             //            addInfo("Done configuring")
         } catch (e: JoranException) {
             //            addError("Failed to configure LogbackValve", e)
         }
     }
 
-    override fun apply(argProvider: AccessLogArgProvider): ReactorAccessLog {
-        return AccessLog(accessContext, argProvider)
-    }
+    override fun apply(argProvider: AccessLogArgProvider) = AccessLog(accessContext, argProvider)
 }
