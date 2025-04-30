@@ -4,7 +4,7 @@ import ch.qos.logback.access.common.spi.ServerAdapter
 import reactor.netty.http.server.logging.AccessLogArgProvider
 
 class ReactorNettyServerAdapter(
-    private val argProvider: AccessLogArgProvider
+    private val argProvider: AccessLogArgProvider,
 ) : ServerAdapter {
     override fun getRequestTimestamp() = argProvider.accessDateTime()?.toInstant()?.toEpochMilli() ?: 0
 
@@ -12,5 +12,7 @@ class ReactorNettyServerAdapter(
 
     override fun getStatusCode() = argProvider.status()?.toString()?.toIntOrNull() ?: -1
 
-    override fun buildResponseHeaderMap() = HeaderMapAdapter { argProvider.responseHeader(it)?.toString() }
+    override fun buildResponseHeaderMap() = argProvider.responseHeaderIterator()?.asSequence()
+        ?.associate { it.key.toString() to it.value.toString() }
+        ?: emptyMap()
 }

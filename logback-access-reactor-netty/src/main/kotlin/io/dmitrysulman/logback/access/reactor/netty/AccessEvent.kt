@@ -7,6 +7,7 @@ import java.io.Serializable
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.util.*
+import java.util.Collections.enumeration
 
 private const val EMPTY_STRING = ""
 private const val NA = "-"
@@ -15,7 +16,7 @@ private val NA_ARRAY = arrayOf(NA)
 class AccessEvent(
     @Transient
     private val argProvider: AccessLogArgProvider,
-    context: AccessContext
+    context: AccessContext,
 ) : IAccessEvent, Serializable {
     private val _timeStamp = System.currentTimeMillis()
     private val _sequenceNumber = context.sequenceNumberGenerator?.nextSequenceNumber() ?: 0
@@ -60,23 +61,31 @@ class AccessEvent(
     private val _contentLength by lazy { _serverAdapter.contentLength }
     private val _statusCode by lazy { _serverAdapter.statusCode }
     private val _localPort by lazy { argProvider.connectionInformation()?.hostPort() ?: -1 }
+    private val _responseHeaderMap by lazy { _serverAdapter.buildResponseHeaderMap() }
+    private val _requestHeaderMap by lazy {
+        argProvider.requestHeaderIterator()?.asSequence()
+            ?.associate { it.key.toString() to it.value.toString() }
+            ?: emptyMap()
+    }
 
     @Transient
     private val _serverAdapter = ReactorNettyServerAdapter(argProvider)
 
     override fun prepareForDeferredProcessing() {
-        getRequestURI()
-        getQueryString()
-        getRemoteHost()
-        getRemoteUser()
-        getProtocol()
-        getMethod()
-        getRequestParameterMap()
-        getRemoteAddr()
+        requestURI
+        queryString
+        remoteHost
+        remoteUser
+        protocol
+        method
+        requestParameterMap
+        remoteAddr
         getCookieMap()
-        getContentLength()
-        getStatusCode()
-        getLocalPort()
+        contentLength
+        statusCode
+        localPort
+        responseHeaderMap
+        requestHeaderMap
     }
 
     override fun getRequest() = null
@@ -117,20 +126,11 @@ class AccessEvent(
 
     override fun getRemoteAddr() = _remoteAddr
 
-    override fun getRequestHeader(key: String): String {
-        // TODO
-        return NA
-    }
+    override fun getRequestHeader(key: String) = _requestHeaderMap[key] ?: NA
 
-    override fun getRequestHeaderNames(): Enumeration<String> {
-        // TODO
-        return Collections.emptyEnumeration()
-    }
+    override fun getRequestHeaderNames(): Enumeration<String> = enumeration(_requestHeaderMap.keys)
 
-    override fun getRequestHeaderMap(): Map<String, String> {
-        // TODO
-        return emptyMap()
-    }
+    override fun getRequestHeaderMap() = _requestHeaderMap
 
     override fun getRequestParameterMap() = _requestParameterMap
 
@@ -154,18 +154,11 @@ class AccessEvent(
 
     override fun getServerAdapter() = _serverAdapter
 
-    override fun getResponseHeader(key: String): String {
-        // TODO
-        return NA
-    }
+    override fun getResponseHeader(key: String) = _responseHeaderMap[key] ?: NA
 
     override fun getResponseHeaderMap(): Map<String, String> {
-        // TODO
-        return emptyMap()
+        return _responseHeaderMap
     }
 
-    override fun getResponseHeaderNameList(): List<String> {
-        // TODO
-        return emptyList()
-    }
+    override fun getResponseHeaderNameList() = _responseHeaderMap.keys.toList()
 }

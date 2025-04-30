@@ -20,9 +20,15 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+configurations.all {
+    // Check for updates every build
+    resolutionStrategy.cacheChangingModulesFor(0, "seconds")
+}
+
 dependencies {
     implementation(libs.logbackAccessCommon)
     implementation(libs.reactorNettyHttp)
+    implementation(libs.slf4jApi)
 
     testImplementation(libs.junitJupiter)
 
