@@ -2,12 +2,15 @@
 junit = "5.12.2"
 kotlin = "2.1.20"
 logbackAccess = "2.0.6"
+logbackClassic = "1.5.18"
 reactorNetty = "1.2.6-SNAPSHOT"
 slf4j = "2.0.17"
 
 [libraries]
 junitJupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
 junitPlatformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
+kotlinGradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 logbackAccessCommon = { group = "ch.qos.logback.access", name = "logback-access-common", version.ref = "logbackAccess" }
+logbackClassic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logbackClassic" }
 reactorNettyHttp = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "reactorNetty" }
 slf4jApi = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }

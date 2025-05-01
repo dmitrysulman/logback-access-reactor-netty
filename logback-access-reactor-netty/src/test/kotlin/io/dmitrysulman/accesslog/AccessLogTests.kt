@@ -1,5 +1,6 @@
 package io.dmitrysulman.accesslog
 
+import ch.qos.logback.access.common.joran.JoranConfigurator
 import io.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -16,7 +17,7 @@ class AccessLogTests {
         val server = HttpServer.create()
             .port(0)
             .handle { _, response -> response.send() }
-            .accessLog(true, ReactorNettyAccessLogFactory(fileName = "logback-stdout.xml", debug = true))
+            .accessLog(true, ReactorNettyAccessLogFactory("logback-stdout.xml", JoranConfigurator(), true))
             .bindNow()
 
         val client = HttpClient.create().port(server.port())

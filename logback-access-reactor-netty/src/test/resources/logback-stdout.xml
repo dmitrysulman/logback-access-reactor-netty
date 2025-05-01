@@ -1,7 +1,7 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%h %l %u %user %date "%r" %s %b</pattern>
+            <pattern>common</pattern>
         </encoder>
     </appender>
 
