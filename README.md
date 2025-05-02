@@ -1,1 +1,51 @@
-# logback-access-reactor-netty
+# Logback Access for Reactor Netty
+
+A library that integrates Logback Access with Reactor Netty HTTP server, providing comprehensive access logging capabilities.
+
+## Overview
+
+This library serves as a bridge between the Reactor Netty HTTP logging mechanism and the Logback Access library. It enables detailed HTTP access logging with configurable formats, filters, and appenders through Logback Access configuration.
+
+## Features
+
+- XML-based configuration support
+- Comprehensive HTTP request/response logging
+- Lazy-loaded access event properties for optimal performance
+- Support for headers, cookies, and request parameters logging
+- Debug mode for troubleshooting
+- Configurable through system properties or external configuration files
+
+## Usage
+
+### Basic Setup
+```java
+ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory();
+HttpServer.create()
+          .accessLog(true, factory)
+          .bindNow()
+          .onDispose()
+          .block();
+```
+
+### Configuration
+
+The library can be configured in several ways:
+
+1. Default configuration: Uses `logback-access.xml` in the classpath
+2. System property: Set `logback.access.reactor.netty.config` to specify configuration file location
+3. Programmatic configuration: Provide configuration file URL or filename directly
+```java
+// Using specific configuration file
+ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory("custom-config.xml");
+// Enable debug mode
+ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory("config.xml", new JoranConfigurator(), true);
+```
+
+## Author
+
+Dmitry Sulman
+
+## See Also
+
+- [Logback Access Documentation](https://logback.qos.ch/access.html)
+- [Reactor Netty HTTP Server Documentation](https://projectreactor.io/docs/netty/release/reference/http-server.html)
