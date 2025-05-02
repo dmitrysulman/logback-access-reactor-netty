@@ -7,10 +7,11 @@ reactorNetty = "1.2.6-SNAPSHOT"
 slf4j = "2.0.17"
 
 [libraries]
-junitJupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
-junitPlatformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
-kotlinGradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
-logbackAccessCommon = { group = "ch.qos.logback.access", name = "logback-access-common", version.ref = "logbackAccess" }
-logbackClassic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logbackClassic" }
-reactorNettyHttp = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "reactorNetty" }
-slf4jApi = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
+junit-platformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+logback-access-common = { group = "ch.qos.logback.access", name = "logback-access-common", version.ref = "logbackAccess" }
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logbackClassic" }
+logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logbackClassic" }
+reactorNetty-http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "reactorNetty" }
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }

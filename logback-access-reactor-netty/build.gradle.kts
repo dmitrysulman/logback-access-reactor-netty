@@ -3,12 +3,13 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.logbackAccessCommon)
-    implementation(libs.reactorNettyHttp)
-    implementation(libs.slf4jApi)
+    implementation(libs.logback.access.common)
+    implementation(libs.reactorNetty.http)
+    implementation(libs.slf4j.api)
 
-    testImplementation(libs.junitJupiter)
-    testImplementation(libs.logbackClassic)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.logback.classic)
+    testImplementation(libs.logback.core)
 
-    testRuntimeOnly(libs.junitPlatformLauncher)
+    testRuntimeOnly(libs.junit.platformLauncher)
 }

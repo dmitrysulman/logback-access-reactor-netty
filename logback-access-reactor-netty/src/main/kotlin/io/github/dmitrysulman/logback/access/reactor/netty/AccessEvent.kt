@@ -1,4 +1,4 @@
-package io.dmitrysulman.logback.access.reactor.netty
+package io.github.dmitrysulman.logback.access.reactor.netty
 
 import ch.qos.logback.access.common.spi.AccessContext
 import ch.qos.logback.access.common.spi.IAccessEvent
@@ -13,6 +13,23 @@ private const val EMPTY_STRING = ""
 private const val NA = "-"
 private val NA_ARRAY = arrayOf(NA)
 
+/**
+ * Represents an access event for logging HTTP requests and responses in a Reactor Netty server environment.
+ * This class implements the Logback Access [IAccessEvent] interface to provide detailed information about access logs,
+ * including request and response data, headers, cookies, and contextual information.
+ *
+ * @constructor Initializes an [AccessEvent] instance with the given [AccessLogArgProvider] and [AccessContext].
+ * The [AccessLogArgProvider] supplies information about the HTTP request and response to populate the event's details.
+ * The [AccessContext] facilitates access logging within the specified context.
+ *
+ * This class includes various lazy-loaded properties to efficiently retrieve detailed information about
+ * the request and response only when needed. It supports deferred processing of logging data through
+ * the `prepareForDeferredProcessing` method, ensuring all necessary attributes are initialized.
+ *
+ * @author Dmitry Sulman
+ * @see IAccessEvent
+ * @see AccessLog
+ */
 class AccessEvent(
     @Transient
     private val argProvider: AccessLogArgProvider,

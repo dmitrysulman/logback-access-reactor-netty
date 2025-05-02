@@ -1,4 +1,4 @@
-package io.dmitrysulman.logback.access.reactor.netty
+package io.github.dmitrysulman.logback.access.reactor.netty
 
 import ch.qos.logback.access.common.spi.ServerAdapter
 import reactor.netty.http.server.logging.AccessLogArgProvider

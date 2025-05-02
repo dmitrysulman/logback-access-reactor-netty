@@ -3,6 +3,8 @@ plugins {
     `maven-publish`
 }
 
+group = "io.github.dmitrysulman"
+
 repositories {
     mavenCentral()
     maven {
@@ -17,6 +19,19 @@ kotlin {
     jvmToolchain(17)
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
 }
