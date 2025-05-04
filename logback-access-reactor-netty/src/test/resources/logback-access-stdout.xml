@@ -1,6 +1,4 @@
 <configuration>
-    <appender name="LIST" class="ch.qos.logback.core.read.ListAppender"/>
-
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>common</pattern>
@@ -8,6 +6,4 @@
     </appender>
 
     <appender-ref ref="STDOUT" />
-
-    <appender-ref ref="LIST" />
 </configuration>
