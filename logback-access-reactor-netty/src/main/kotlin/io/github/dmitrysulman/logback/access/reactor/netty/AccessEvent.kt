@@ -4,14 +4,11 @@ import ch.qos.logback.access.common.spi.AccessContext
 import ch.qos.logback.access.common.spi.IAccessEvent
 import reactor.netty.http.server.logging.AccessLogArgProvider
 import java.io.Serializable
+import java.net.InetSocketAddress
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.util.*
 import java.util.Collections.enumeration
-
-private const val EMPTY_STRING = ""
-private const val NA = "-"
-private val NA_ARRAY = arrayOf(NA)
 
 /**
  * Represents an access event for logging HTTP requests and responses in a Reactor Netty server environment.
@@ -48,10 +45,17 @@ class AccessEvent(
                 .orEmpty()
         } ?: NA
     }
-    private val _remoteHost by lazy { argProvider.connectionInformation()?.hostName() ?: NA }
+    private val _remoteHost by lazy {
+        val remoteAddress = argProvider.connectionInformation()?.remoteAddress()
+        if (remoteAddress is InetSocketAddress) {
+            remoteAddress.hostString
+        } else {
+            remoteAddress?.toString()
+        } ?: NA
+    }
     private val _remoteUser by lazy { argProvider.user() ?: NA }
     private val _protocol by lazy { argProvider.protocol() ?: NA  }
-    private val _method by lazy { argProvider.method()?.toString() ?: NA  }
+    private val _method by lazy { argProvider.method()?.toString() ?: NA }
     private lateinit var _threadName: String
     private val _requestParameterMap by lazy {
         _queryString.takeIf { it.isNotEmpty() && it != NA }
@@ -69,7 +73,14 @@ class AccessEvent(
             ?.mapValues { it.value.toTypedArray() }
             ?: emptyMap()
     }
-    private val _remoteAddr by lazy { argProvider.connectionInformation()?.remoteAddress()?.toString() ?: NA }
+    private val _remoteAddr by lazy {
+        val remoteAddress = argProvider.connectionInformation()?.remoteAddress()
+        if (remoteAddress is InetSocketAddress) {
+            remoteAddress.address?.hostAddress
+        } else {
+            remoteAddress?.toString()
+        } ?: NA
+    }
     private val _cookieMap by lazy {
         argProvider.cookies()?.entries?.associate {
             it.key.toString() to (it.value.firstOrNull()?.value() ?: NA)
@@ -178,4 +189,15 @@ class AccessEvent(
     }
 
     override fun getResponseHeaderNameList() = _responseHeaderMap.keys.toList()
+
+    companion object {
+        @JvmStatic
+        private val EMPTY_STRING = ""
+
+        @JvmStatic
+        private val NA = "-"
+
+        @JvmStatic
+        private val NA_ARRAY = arrayOf(NA)
+    }
 }
