@@ -1,4 +1,5 @@
 [versions]
+jreleaser = "1.18.0"
 junit = "5.12.2"
 kotlin = "2.1.20"
 logbackAccess = "2.0.6"
@@ -15,3 +16,6 @@ logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.
 logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logbackClassic" }
 reactorNetty-http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "reactorNetty" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+
+[plugins]
+jreleaser = {  id = "org.jreleaser", version.ref = "jreleaser" }

@@ -2,6 +2,8 @@ plugins {
     id("conventions")
 }
 
+description = "Logback Access integration with Reactor Netty"
+
 dependencies {
     implementation(libs.logback.access.common)
     implementation(libs.reactorNetty.http)
