@@ -2,8 +2,6 @@ plugins {
     id("conventions")
 }
 
-// Comment to fool CodeQL: languageVersion.set(JavaLanguageVersion.of(17))
-
 description = "Logback Access integration with Reactor Netty"
 
 dependencies {
