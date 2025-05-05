@@ -2,6 +2,10 @@ plugins {
     id("conventions")
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 description = "Logback Access integration with Reactor Netty"
 
 dependencies {
