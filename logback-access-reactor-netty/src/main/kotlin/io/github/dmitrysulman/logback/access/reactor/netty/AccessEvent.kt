@@ -46,7 +46,7 @@ class AccessEvent(
         } ?: NA
     }
     private val _remoteHost by lazy {
-        val remoteAddress = argProvider.connectionInformation()?.remoteAddress()
+        val remoteAddress = argProvider.connectionInformation()?.connectionRemoteAddress()
         if (remoteAddress is InetSocketAddress) {
             remoteAddress.hostString
         } else {
@@ -74,7 +74,7 @@ class AccessEvent(
             ?: emptyMap()
     }
     private val _remoteAddr by lazy {
-        val remoteAddress = argProvider.connectionInformation()?.remoteAddress()
+        val remoteAddress = argProvider.connectionInformation()?.connectionRemoteAddress()
         if (remoteAddress is InetSocketAddress) {
             remoteAddress.address?.hostAddress
         } else {
