@@ -1,1 +1,0 @@
-// Comment to fool CodeQL: languageVersion.set(JavaLanguageVersion.of(17))
