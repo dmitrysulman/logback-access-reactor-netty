@@ -66,7 +66,7 @@ class AccessLogTests {
         val response = performGetRequest("/test")
         assertNotNull(response)
 
-        Thread.sleep(150)
+        Thread.sleep(100)
         assertEquals(1, eventCaptureAppender.list.size)
         val accessEvent = eventCaptureAppender.list[0]
         assertAccessEvent(accessEvent, response)
