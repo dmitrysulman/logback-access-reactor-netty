@@ -14,4 +14,6 @@ dependencies {
     testImplementation(libs.logback.core)
 
     testRuntimeOnly(libs.junit.platformLauncher)
+
+    implementation("com.hierynomus:sshj:0.39.0")
 }
