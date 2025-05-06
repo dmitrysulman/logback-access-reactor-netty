@@ -1,10 +1,10 @@
 plugins {
     `kotlin-dsl`
-    alias(libs.plugins.jreleaser)
 }
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 kotlin {
@@ -12,14 +12,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(libs.dokka.gradlePlugin)
+    implementation(libs.dokka.javadocPlugin)
     implementation(libs.kotlin.gradlePlugin)
-}
-
-val copyStagingDeploy by tasks.registering(Copy::class) {
-    from("../logback-access-reactor-netty/build/staging-deploy")
-    into("build/staging-deploy")
-}
-
-tasks.jreleaserFullRelease {
-    dependsOn(copyStagingDeploy)
 }

@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     kotlin("jvm")
     `maven-publish`
+    id("org.jetbrains.dokka")
+    id("org.jetbrains.dokka-javadoc")
 }
 
 group = "io.github.dmitrysulman"
@@ -26,7 +28,6 @@ kotlin {
 
 java {
     targetCompatibility = JavaVersion.VERSION_1_8
-    withJavadocJar()
     withSourcesJar()
 }
 
@@ -34,10 +35,25 @@ tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
+val copyStagingDeployToRoot by tasks.registering(Copy::class) {
+    group = "publishing"
+    dependsOn(tasks.publish)
+    from("./build/staging-deploy")
+    into("../build/staging-deploy")
+}
+
+val dokkaJavadocJar by tasks.registering(Jar::class) {
+    group = "dokka"
+    dependsOn(tasks.dokkaGeneratePublicationJavadoc)
+    from(tasks.dokkaGeneratePublicationJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
+            artifact(dokkaJavadocJar)
             pom {
                 afterEvaluate {
                     pom.name = project.description

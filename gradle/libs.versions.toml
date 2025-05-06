@@ -1,4 +1,5 @@
 [versions]
+dokka = "2.0.0"
 jreleaser = "1.18.0"
 junit = "5.12.2"
 kotlin = "2.1.20"
@@ -8,6 +9,8 @@ reactorNetty = "1.2.6-SNAPSHOT"
 slf4j = "2.0.17"
 
 [libraries]
+dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+dokka-javadocPlugin = { group = "org.jetbrains.dokka-javadoc", name = "org.jetbrains.dokka-javadoc.gradle.plugin", version.ref = "dokka" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
 junit-platformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -18,4 +21,4 @@ reactorNetty-http = { group = "io.projectreactor.netty", name = "reactor-netty-h
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 
 [plugins]
-jreleaser = {  id = "org.jreleaser", version.ref = "jreleaser" }
+jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
