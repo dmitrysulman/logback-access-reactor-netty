@@ -8,7 +8,7 @@ repositories {
     gradlePluginPortal()
 }
 
-val jreleaserFullRelease by tasks.existing {
+tasks.jreleaserFullRelease {
     subprojects.forEach {
         val copyStagingDeployToRoot by it.tasks.existing
         dependsOn(copyStagingDeployToRoot)

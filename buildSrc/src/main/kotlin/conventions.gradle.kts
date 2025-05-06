@@ -5,6 +5,7 @@ plugins {
     `maven-publish`
     id("org.jetbrains.dokka")
     id("org.jetbrains.dokka-javadoc")
+    jacoco
 }
 
 group = "io.github.dmitrysulman"
@@ -29,6 +30,11 @@ kotlin {
 java {
     targetCompatibility = JavaVersion.VERSION_1_8
     withSourcesJar()
+}
+
+tasks.build {
+    dependsOn(tasks.test)
+    dependsOn(tasks.jacocoTestReport)
 }
 
 tasks.withType<Test>().configureEach {
@@ -86,5 +92,13 @@ publishing {
         maven {
             url = uri(layout.buildDirectory.dir("staging-deploy"))
         }
+    }
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required = true
+        html.required = true
     }
 }
