@@ -1,6 +1,8 @@
+# Logback Access for Reactor Netty
+
+[![Build](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/build.yml/badge.svg)](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty/graph/badge.svg?token=LOEJQ7K8Z7)](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty)
 [![CodeQL](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/codeql.yml/badge.svg)](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/codeql.yml)
-# Logback Access for Reactor Netty
 
 A library that integrates Logback Access with Reactor Netty HTTP server, providing comprehensive access logging capabilities.
 
@@ -16,6 +18,13 @@ This library serves as a bridge between the Reactor Netty HTTP logging mechanism
 - Support for headers, cookies, and request parameters logging
 - Debug mode for troubleshooting
 - Configurable through system properties or external configuration files
+
+## Dependencies
+
+- Java 8+
+- Logback-access 2.0.6
+- Reactor Netty HTTP Server 1.2.6-SNAPSHOT
+- SLF4J 2.0.17
 
 ## Usage
 
@@ -45,7 +54,7 @@ ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory("config.
 
 ## Author
 
-Dmitry Sulman
+[Dmitry Sulman](https://www.linkedin.com/in/dmitrysulman/)
 
 ## See Also
 
