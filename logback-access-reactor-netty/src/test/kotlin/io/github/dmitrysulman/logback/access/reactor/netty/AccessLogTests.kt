@@ -3,14 +3,14 @@ package io.github.dmitrysulman.logback.access.reactor.netty
 import ch.qos.logback.access.common.joran.JoranConfigurator
 import ch.qos.logback.access.common.spi.IAccessEvent
 import io.github.dmitrysulman.logback.access.reactor.netty.util.EventCaptureAppender
+import io.kotest.matchers.comparables.shouldBeGreaterThan
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH
 import io.netty.handler.codec.http.cookie.DefaultCookie
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertNotNull
 import reactor.core.publisher.Mono
 import reactor.netty.DisposableServer
 import reactor.netty.http.client.HttpClient
@@ -39,7 +39,6 @@ private const val TEST_COOKIE_VALUE = "cookieValue"
 // TODO different ways of providing configuration
 // TODO filters
 class AccessLogTests {
-
     private lateinit var server: DisposableServer
     private lateinit var eventCaptureAppender: EventCaptureAppender
     private var now: Long = 0
@@ -57,17 +56,18 @@ class AccessLogTests {
 
     @Test
     fun `GET request without query params`() {
-        val accessLogFactory = ReactorNettyAccessLogFactory("logback-access-stdout.xml", JoranConfigurator(), true)
-            .apply {
-                accessContext.addAppender(eventCaptureAppender)
-            }
+        val accessLogFactory =
+            ReactorNettyAccessLogFactory("logback-access-stdout.xml", JoranConfigurator(), true)
+                .apply {
+                    accessContext.addAppender(eventCaptureAppender)
+                }
 
         server = createServer(accessLogFactory, "mock response")
         val response = performGetRequest("/test")
-        assertNotNull(response)
+        response.shouldNotBeNull()
 
         Thread.sleep(100)
-        assertEquals(1, eventCaptureAppender.list.size)
+        eventCaptureAppender.list.size shouldBe 1
         val accessEvent = eventCaptureAppender.list[0]
         assertAccessEvent(accessEvent, response)
     }
@@ -76,30 +76,31 @@ class AccessLogTests {
         accessEvent: IAccessEvent,
         response: HttpClientResponse,
     ) {
-        assertEquals("${response.method().name()} ${response.uri()} ${response.version().text()}", accessEvent.requestURL)
-        assertEquals(response.uri(), accessEvent.requestURI)
-        assertEquals(server.port(), accessEvent.localPort)
-        assertEquals(response.responseHeaders().get(REMOTE_HOST_HEADER), accessEvent.remoteHost)
-        assertEquals(response.responseHeaders().get(REMOTE_ADDRESS_HEADER), accessEvent.remoteAddr)
-        assertEquals("", accessEvent.queryString)
-        assertEquals(response.version().text(), accessEvent.protocol)
-        assertEquals(response.method().name(), accessEvent.method)
-        assertEquals(response.status().code(), accessEvent.statusCode)
-        assertTrue(accessEvent.elapsedTime > 0)
-        assertTrue(accessEvent.timeStamp > now)
-        assertEquals(0, accessEvent.sequenceNumber)
-        assertEquals( "-", accessEvent.remoteUser)
-        assertEquals(TEST_REQUEST_HEADER_VALUE, accessEvent.getRequestHeader(TEST_REQUEST_HEADER_NAME))
-        assertEquals(TEST_RESPONSE_HEADER_VALUE, accessEvent.getResponseHeader(TEST_RESPONSE_HEADER_NAME))
-        assertEquals(TEST_COOKIE_VALUE, accessEvent.getCookie(TEST_COOKIE_NAME))
-        assertEquals(response.responseHeaders().get(CONTENT_LENGTH)?.toLongOrNull() ?: 0, accessEvent.contentLength)
+        accessEvent.requestURL shouldBe "${response.method().name()} ${response.uri()} ${response.version().text()}"
+        accessEvent.requestURI shouldBe response.uri()
+        accessEvent.localPort shouldBe server.port()
+        accessEvent.remoteHost shouldBe response.responseHeaders().get(REMOTE_HOST_HEADER)
+        accessEvent.remoteAddr shouldBe response.responseHeaders().get(REMOTE_ADDRESS_HEADER)
+        accessEvent.queryString shouldBe ""
+        accessEvent.protocol shouldBe response.version().text()
+        accessEvent.method shouldBe response.method().name()
+        accessEvent.statusCode shouldBe response.status().code()
+        accessEvent.elapsedTime shouldBeGreaterThan 0
+        accessEvent.timeStamp shouldBeGreaterThan now
+        accessEvent.sequenceNumber shouldBe 0
+        accessEvent.remoteUser shouldBe "-"
+        accessEvent.getRequestHeader(TEST_REQUEST_HEADER_NAME) shouldBe TEST_REQUEST_HEADER_VALUE
+        accessEvent.getResponseHeader(TEST_RESPONSE_HEADER_NAME) shouldBe TEST_RESPONSE_HEADER_VALUE
+        accessEvent.getCookie(TEST_COOKIE_NAME) shouldBe TEST_COOKIE_VALUE
+        accessEvent.contentLength shouldBe (response.responseHeaders().get(CONTENT_LENGTH)?.toLongOrNull() ?: 0)
     }
 
     private fun createServer(
         accessLogFactory: ReactorNettyAccessLogFactory,
-        responseContent: String
-    ): DisposableServer {
-        return HttpServer.create()
+        responseContent: String,
+    ): DisposableServer =
+        HttpServer
+            .create()
             .handle { request, response ->
                 val remoteHost = (request.remoteAddress() as InetSocketAddress).hostString
                 val remoteAddress = (request.remoteAddress() as InetSocketAddress).address.hostAddress
@@ -108,13 +109,11 @@ class AccessLogTests {
                     .addHeader(REMOTE_ADDRESS_HEADER, remoteAddress)
                     .addHeader(TEST_RESPONSE_HEADER_NAME, TEST_RESPONSE_HEADER_VALUE)
                     .sendByteArray(Mono.just(responseContent.toByteArray()))
-            }
-            .accessLog(true, accessLogFactory)
+            }.accessLog(true, accessLogFactory)
             .bindNow()
-    }
 
-    private fun performGetRequest(uri: String): HttpClientResponse? {
-        return HttpClient
+    private fun performGetRequest(uri: String): HttpClientResponse? =
+        HttpClient
             .create()
             .port(server.port())
             .headers { it.add(TEST_REQUEST_HEADER_NAME, TEST_REQUEST_HEADER_VALUE) }
@@ -123,5 +122,4 @@ class AccessLogTests {
             .uri(uri)
             .response()
             .block(30.seconds.toJavaDuration())
-    }
 }

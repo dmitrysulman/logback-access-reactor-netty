@@ -2,7 +2,11 @@ package io.github.dmitrysulman.logback.access.reactor.netty
 
 import ch.qos.logback.access.common.joran.JoranConfigurator
 import ch.qos.logback.access.common.spi.AccessContext
-import ch.qos.logback.core.status.*
+import ch.qos.logback.core.status.ErrorStatus
+import ch.qos.logback.core.status.InfoStatus
+import ch.qos.logback.core.status.OnConsoleStatusListener
+import ch.qos.logback.core.status.Status
+import ch.qos.logback.core.status.WarnStatus
 import ch.qos.logback.core.util.StatusListenerConfigHelper
 import ch.qos.logback.core.util.StatusPrinter2
 import reactor.netty.http.server.logging.AccessLogArgProvider
@@ -42,7 +46,6 @@ import java.net.URL
  * @see AccessLogFactory
  */
 class ReactorNettyAccessLogFactory : AccessLogFactory {
-
     /**
      * An instance of [AccessContext], which serves as the main context object for managing the state and components
      * involved in the access logging process. It provides facilities for managing appenders, filters, and status listeners
@@ -116,7 +119,11 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
         initialize(getDefaultConfig(), JoranConfigurator(), false)
     }
 
-    private fun initialize(config: URL?, joranConfigurator: JoranConfigurator, debug: Boolean) {
+    private fun initialize(
+        config: URL?,
+        joranConfigurator: JoranConfigurator,
+        debug: Boolean,
+    ) {
         try {
             if (config != null) {
                 addStatus(InfoStatus("Start configuring with configuration file [${config.file}]", this::class.java.simpleName))
@@ -141,15 +148,25 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
 
     private fun getDefaultConfig(): URL? {
         return try {
-            val fileNameFromSystemProperty = System.getProperty(CONFIG_FILE_NAME_PROPERTY)?.also {
-                addStatus(InfoStatus("Found system property [$CONFIG_FILE_NAME_PROPERTY] value: [$it]",
-                    this::class.java.simpleName))
-            }
-            val fileName = fileNameFromSystemProperty ?: run {
-                addStatus(InfoStatus("No system property [$CONFIG_FILE_NAME_PROPERTY] provided, checking [$DEFAULT_CONFIG_FILE_NAME]",
-                    this::class.java.simpleName))
-                DEFAULT_CONFIG_FILE_NAME
-            }
+            val fileNameFromSystemProperty =
+                System.getProperty(CONFIG_FILE_NAME_PROPERTY)?.also {
+                    addStatus(
+                        InfoStatus(
+                            "Found system property [$CONFIG_FILE_NAME_PROPERTY] value: [$it]",
+                            this::class.java.simpleName,
+                        ),
+                    )
+                }
+            val fileName =
+                fileNameFromSystemProperty ?: run {
+                    addStatus(
+                        InfoStatus(
+                            "No system property [$CONFIG_FILE_NAME_PROPERTY] provided, checking [$DEFAULT_CONFIG_FILE_NAME]",
+                            this::class.java.simpleName,
+                        ),
+                    )
+                    DEFAULT_CONFIG_FILE_NAME
+                }
             getConfigFromFileName(fileName)
         } catch (e: FileNotFoundException) {
             addStatus(WarnStatus(e.message, this::class.java.simpleName))

@@ -12,7 +12,10 @@ class ReactorNettyServerAdapter(
 
     override fun getStatusCode() = argProvider.status()?.toString()?.toIntOrNull() ?: -1
 
-    override fun buildResponseHeaderMap() = argProvider.responseHeaderIterator()?.asSequence()
-        ?.associate { it.key.toString() to it.value.toString() }
-        ?: emptyMap()
+    override fun buildResponseHeaderMap() =
+        argProvider
+            .responseHeaderIterator()
+            ?.asSequence()
+            ?.associate { it.key.toString() to it.value.toString() }
+            ?: emptyMap()
 }

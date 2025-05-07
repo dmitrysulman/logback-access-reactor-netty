@@ -2,10 +2,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
-    `maven-publish`
     id("org.jetbrains.dokka")
     id("org.jetbrains.dokka-javadoc")
+    id("org.jlleitschuh.gradle.ktlint")
     jacoco
+    `maven-publish`
 }
 
 group = "io.github.dmitrysulman"
@@ -35,6 +36,7 @@ java {
 tasks.build {
     dependsOn(tasks.test)
     dependsOn(tasks.jacocoTestReport)
+    dependsOn(tasks.ktlintCheck)
 }
 
 tasks.withType<Test>().configureEach {
@@ -101,4 +103,13 @@ tasks.jacocoTestReport {
         xml.required = true
         html.required = true
     }
+}
+
+configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    version = "1.5.0"
+    additionalEditorconfig.set(
+        mapOf(
+            "ktlint_standard_backing-property-naming" to "disabled"
+        )
+    )
 }

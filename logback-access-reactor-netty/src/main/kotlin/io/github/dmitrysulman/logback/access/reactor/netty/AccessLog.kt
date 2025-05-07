@@ -29,7 +29,6 @@ class AccessLog(
     private val accessContext: AccessContext,
     private val argProvider: AccessLogArgProvider,
 ) : ReactorAccessLog("") {
-
     /**
      * Logs an access event by creating an instance of [AccessEvent] and processing it through the [AccessContext].
      *

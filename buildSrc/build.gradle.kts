@@ -15,4 +15,5 @@ dependencies {
     implementation(libs.dokka.gradlePlugin)
     implementation(libs.dokka.javadocPlugin)
     implementation(libs.kotlin.gradlePlugin)
+    implementation(libs.ktlintPlugin)
 }

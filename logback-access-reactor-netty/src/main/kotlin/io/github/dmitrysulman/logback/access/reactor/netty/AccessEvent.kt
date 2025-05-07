@@ -7,8 +7,8 @@ import java.io.Serializable
 import java.net.InetSocketAddress
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
-import java.util.*
 import java.util.Collections.enumeration
+import java.util.Enumeration
 
 /**
  * Represents an access event for logging HTTP requests and responses in a Reactor Netty server environment.
@@ -31,7 +31,8 @@ class AccessEvent(
     @Transient
     private val argProvider: AccessLogArgProvider,
     context: AccessContext,
-) : IAccessEvent, Serializable {
+) : IAccessEvent,
+    Serializable {
     private val _timeStamp = System.currentTimeMillis()
     private val _sequenceNumber = context.sequenceNumberGenerator?.nextSequenceNumber() ?: 0
     private val _elapsedTime = argProvider.duration()
@@ -39,7 +40,8 @@ class AccessEvent(
     private val _requestUri by lazy { argProvider.uri()?.toString()?.substringBefore("?") ?: NA }
     private val _queryString by lazy {
         argProvider.uri()?.let { uri ->
-            uri.indexOf("?")
+            uri
+                .indexOf("?")
                 .takeIf { it != -1 }
                 ?.let { uri.substring(it) }
                 .orEmpty()
@@ -54,23 +56,24 @@ class AccessEvent(
         } ?: NA
     }
     private val _remoteUser by lazy { argProvider.user() ?: NA }
-    private val _protocol by lazy { argProvider.protocol() ?: NA  }
+    private val _protocol by lazy { argProvider.protocol() ?: NA }
     private val _method by lazy { argProvider.method()?.toString() ?: NA }
     private lateinit var _threadName: String
     private val _requestParameterMap by lazy {
-        _queryString.takeIf { it.isNotEmpty() && it != NA }
+        _queryString
+            .takeIf { it.isNotEmpty() && it != NA }
             ?.substring(1)
             ?.split("&")
             ?.mapNotNull {
                 val index = it.indexOf("=")
                 if (index in 1..it.length - 2) {
                     it.substring(0, index) to it.substring(index + 1)
-                } else null
-            }
-            ?.groupBy({ URLDecoder.decode(it.first, StandardCharsets.UTF_8) }) {
+                } else {
+                    null
+                }
+            }?.groupBy({ URLDecoder.decode(it.first, StandardCharsets.UTF_8) }) {
                 URLDecoder.decode(it.second, StandardCharsets.UTF_8)
-            }
-            ?.mapValues { it.value.toTypedArray() }
+            }?.mapValues { it.value.toTypedArray() }
             ?: emptyMap()
     }
     private val _remoteAddr by lazy {
@@ -91,7 +94,9 @@ class AccessEvent(
     private val _localPort by lazy { argProvider.connectionInformation()?.hostPort() ?: -1 }
     private val _responseHeaderMap by lazy { _serverAdapter.buildResponseHeaderMap() }
     private val _requestHeaderMap by lazy {
-        argProvider.requestHeaderIterator()?.asSequence()
+        argProvider
+            .requestHeaderIterator()
+            ?.asSequence()
             ?.associate { it.key.toString() to it.value.toString() }
             ?: emptyMap()
     }
@@ -184,9 +189,7 @@ class AccessEvent(
 
     override fun getResponseHeader(key: String) = _responseHeaderMap[key] ?: NA
 
-    override fun getResponseHeaderMap(): Map<String, String> {
-        return _responseHeaderMap
-    }
+    override fun getResponseHeaderMap(): Map<String, String> = _responseHeaderMap
 
     override fun getResponseHeaderNameList() = _responseHeaderMap.keys.toList()
 
