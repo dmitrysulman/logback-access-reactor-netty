@@ -194,13 +194,10 @@ class AccessEvent(
     override fun getResponseHeaderNameList() = _responseHeaderMap.keys.toList()
 
     companion object {
-        @JvmStatic
-        private val EMPTY_STRING = ""
+        private const val EMPTY_STRING = ""
 
-        @JvmStatic
-        private val NA = "-"
+        private const val NA = "-"
 
-        @JvmStatic
         private val NA_ARRAY = arrayOf(NA)
     }
 }

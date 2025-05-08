@@ -13,6 +13,7 @@ dependencies {
     testImplementation(libs.kotest.assertions.core.jvm)
     testImplementation(libs.logback.classic)
     testImplementation(libs.logback.core)
+    testImplementation(libs.mockk)
 
     testRuntimeOnly(libs.junit.platformLauncher)
 }

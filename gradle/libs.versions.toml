@@ -7,6 +7,7 @@ kotlin = "2.1.20"
 ktlint = "12.2.0"
 logbackAccess = "2.0.6"
 logbackClassic = "1.5.18"
+mockk = "1.14.2"
 reactorNetty = "1.2.6-SNAPSHOT"
 slf4j = "2.0.17"
 
@@ -21,6 +22,7 @@ ktlintPlugin = { group = "org.jlleitschuh.gradle.ktlint", name = "org.jlleitschu
 logback-access-common = { group = "ch.qos.logback.access", name = "logback-access-common", version.ref = "logbackAccess" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logbackClassic" }
 logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logbackClassic" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 reactorNetty-http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "reactorNetty" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 

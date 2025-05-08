@@ -38,7 +38,7 @@ class AccessLog(
      * If an error occurs during the logging process, it is recorded in the status manager of the [AccessContext] and logged
      * using the internal logger.
      */
-    override fun log() {
+    public override fun log() {
         try {
             val accessEvent = AccessEvent(argProvider, accessContext)
             accessEvent.threadName = Thread.currentThread().name
@@ -52,7 +52,6 @@ class AccessLog(
     }
 
     companion object {
-        @JvmStatic
         private val logger = LoggerFactory.getLogger(AccessLog::class.java)
     }
 }

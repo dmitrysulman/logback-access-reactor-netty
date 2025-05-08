@@ -203,13 +203,11 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
         /**
          * The name of the system property used to specify the Logback Access configuration file.
          */
-        @JvmStatic
-        val CONFIG_FILE_NAME_PROPERTY = "logback.access.reactor.netty.config"
+        const val CONFIG_FILE_NAME_PROPERTY = "logback.access.reactor.netty.config"
 
         /**
          * The default configuration file name used for the Logback Access configuration.
          */
-        @JvmStatic
-        val DEFAULT_CONFIG_FILE_NAME = "logback-access.xml"
+        const val DEFAULT_CONFIG_FILE_NAME = "logback-access.xml"
     }
 }

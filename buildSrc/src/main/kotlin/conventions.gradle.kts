@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
     kotlin("jvm")
@@ -105,7 +106,7 @@ tasks.jacocoTestReport {
     }
 }
 
-configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+configure<KtlintExtension> {
     version = "1.5.0"
     additionalEditorconfig.set(
         mapOf(
