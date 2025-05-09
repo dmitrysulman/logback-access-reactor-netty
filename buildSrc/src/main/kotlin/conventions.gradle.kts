@@ -24,13 +24,13 @@ repositories {
 
 kotlin {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_1_8
+        jvmTarget = JvmTarget.JVM_17
     }
     jvmToolchain(21)
 }
 
 java {
-    targetCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_17
     withSourcesJar()
 }
 
