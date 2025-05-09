@@ -21,8 +21,8 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
 // TODO sequence number
-// TODO auth user
 // TODO filters
+// TODO Performance test
 class IntegrationTests {
     private lateinit var server: DisposableServer
     private lateinit var eventCaptureAppender: EventCaptureAppender
@@ -48,7 +48,7 @@ class IntegrationTests {
                 }
 
         server = createServer(accessLogFactory, "mock response")
-        val response = performGetRequest("/test")
+        val response = performGetRequest("/test?name=value")
         response.shouldNotBeNull()
 
         Thread.sleep(100)
@@ -62,11 +62,12 @@ class IntegrationTests {
         response: HttpClientResponse,
     ) {
         accessEvent.requestURL shouldBe "${response.method().name()} ${response.uri()} ${response.version().text()}"
-        accessEvent.requestURI shouldBe response.uri()
+        accessEvent.requestURI shouldBe response.fullPath()
         accessEvent.localPort shouldBe server.port()
         accessEvent.remoteHost shouldBe response.responseHeaders().get(REMOTE_HOST_HEADER)
         accessEvent.remoteAddr shouldBe response.responseHeaders().get(REMOTE_ADDRESS_HEADER)
-        accessEvent.queryString shouldBe ""
+        accessEvent.queryString shouldBe
+            if (response.uri().indexOf("?") != -1) response.uri().substring(response.uri().indexOf("?")) else ""
         accessEvent.protocol shouldBe response.version().text()
         accessEvent.method shouldBe response.method().name()
         accessEvent.statusCode shouldBe response.status().code()

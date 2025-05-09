@@ -12,7 +12,7 @@ import java.time.ZonedDateTime
 class ReactorNettyServerAdapterTests {
     @Test
     fun `smoke test`() {
-        val mockArgProvider = mockk<AccessLogArgProvider>(relaxed = true)
+        val mockArgProvider = mockk<AccessLogArgProvider>()
         every { mockArgProvider.accessDateTime() } returns ZonedDateTime.ofInstant(Instant.ofEpochMilli(1746734856000), ZoneId.of("UTC"))
         every { mockArgProvider.contentLength() } returns 100
         every { mockArgProvider.status() } returns "200"
@@ -30,5 +30,19 @@ class ReactorNettyServerAdapterTests {
         reactorNettyServerAdapter.contentLength shouldBe 100
         reactorNettyServerAdapter.statusCode shouldBe 200
         reactorNettyServerAdapter.buildResponseHeaderMap() shouldBe mapOf("key" to "value")
+    }
+
+    @Test
+    fun `test on null values`() {
+        val mockArgProvider = mockk<AccessLogArgProvider>()
+        every { mockArgProvider.accessDateTime() } returns null
+        every { mockArgProvider.status() } returns null
+        every { mockArgProvider.responseHeaderIterator() } returns null
+
+        val reactorNettyServerAdapter = ReactorNettyServerAdapter(mockArgProvider)
+
+        reactorNettyServerAdapter.requestTimestamp shouldBe 0
+        reactorNettyServerAdapter.statusCode shouldBe -1
+        reactorNettyServerAdapter.buildResponseHeaderMap() shouldBe emptyMap()
     }
 }

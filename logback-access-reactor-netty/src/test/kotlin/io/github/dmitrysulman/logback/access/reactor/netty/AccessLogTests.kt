@@ -2,7 +2,7 @@ package io.github.dmitrysulman.logback.access.reactor.netty
 
 import ch.qos.logback.access.common.spi.AccessContext
 import ch.qos.logback.core.spi.FilterReply
-import ch.qos.logback.core.status.Status
+import ch.qos.logback.core.status.ErrorStatus
 import ch.qos.logback.core.status.StatusManager
 import io.mockk.every
 import io.mockk.mockk
@@ -47,6 +47,6 @@ class AccessLogTests {
         val accessLog = AccessLog(mockContext, mockArgProvider)
         accessLog.log()
 
-        verify(exactly = 1) { mockStatusManager.add(any<Status>()) }
+        verify(exactly = 1) { mockStatusManager.add(any<ErrorStatus>()) }
     }
 }
