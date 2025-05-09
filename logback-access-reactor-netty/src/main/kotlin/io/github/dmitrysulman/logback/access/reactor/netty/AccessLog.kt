@@ -41,7 +41,7 @@ class AccessLog(
     public override fun log() {
         try {
             val accessEvent = AccessEvent(argProvider, accessContext)
-            accessEvent.threadName = Thread.currentThread().name
+            accessEvent.setThreadName(Thread.currentThread().name)
             if (accessContext.getFilterChainDecision(accessEvent) != FilterReply.DENY) {
                 accessContext.callAppenders(accessEvent)
             }
