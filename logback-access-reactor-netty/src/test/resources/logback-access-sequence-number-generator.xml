@@ -1,0 +1,3 @@
+<configuration>
+    <sequenceNumberGenerator class="ch.qos.logback.core.spi.BasicSequenceNumberGenerator"/>
+</configuration>

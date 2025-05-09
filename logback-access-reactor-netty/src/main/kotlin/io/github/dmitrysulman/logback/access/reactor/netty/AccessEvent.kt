@@ -114,12 +114,23 @@ class AccessEvent(
         argProvider
             .requestHeaderIterator()
             ?.asSequence()
-            ?.associate { it.key.toString() to it.value.toString() }
+            ?.mapNotNull { (name, value) ->
+                if (name.isNullOrEmpty()) return@mapNotNull null
+                if (value == null) return@mapNotNull null
+                name.toString() to value.toString()
+            }?.toMap()
             ?: emptyMap()
     }
 
     @Transient
     private val _serverAdapter = ReactorNettyServerAdapter(argProvider)
+
+    private fun String.decodeCatching() =
+        try {
+            URLDecoder.decode(this, StandardCharsets.UTF_8)
+        } catch (_: Exception) {
+            this
+        }
 
     override fun prepareForDeferredProcessing() {
         requestURI
@@ -211,7 +222,7 @@ class AccessEvent(
 
     override fun getResponseHeader(key: String) = _responseHeaderMap[key] ?: NA
 
-    override fun getResponseHeaderMap(): Map<String, String> = _responseHeaderMap
+    override fun getResponseHeaderMap() = _responseHeaderMap
 
     override fun getResponseHeaderNameList() = _responseHeaderMap.keys.toList()
 
@@ -222,11 +233,4 @@ class AccessEvent(
 
         private val NA_ARRAY = arrayOf(NA)
     }
-
-    private fun String.decodeCatching(): String =
-        try {
-            URLDecoder.decode(this, StandardCharsets.UTF_8)
-        } catch (_: Exception) {
-            this
-        }
 }

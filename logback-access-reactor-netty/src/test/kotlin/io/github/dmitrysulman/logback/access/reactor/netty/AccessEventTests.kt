@@ -20,7 +20,6 @@ import java.net.SocketAddress
 import java.util.Collections
 import io.netty.handler.codec.http.cookie.Cookie as NettyCookie
 
-// TODO request/response headers
 class AccessEventTests {
     @Test
     fun `test basic properties`() {
@@ -316,6 +315,10 @@ class AccessEventTests {
         accessEvent.remoteUser shouldBe NA
         accessEvent.getRequestHeader(HEADER) shouldBe NA
         accessEvent.getResponseHeader(HEADER) shouldBe NA
+        accessEvent.requestHeaderMap.isEmpty() shouldBe true
+        accessEvent.requestHeaderNames.hasMoreElements() shouldBe false
+        accessEvent.responseHeaderMap.isEmpty() shouldBe true
+        accessEvent.responseHeaderNameList.isEmpty() shouldBe true
         accessEvent.getCookie(COOKIE) shouldBe NA
     }
 
@@ -379,6 +382,45 @@ class AccessEventTests {
     }
 
     @Test
+    fun `test request headers`() {
+        val mockContext = mockk<AccessContext>(relaxed = true)
+        val mockArgProvider = mockk<AccessLogArgProvider>(relaxed = true)
+        every { mockArgProvider.requestHeaderIterator() } returns headerListIterator()
+
+        val accessEvent = AccessEvent(mockArgProvider, mockContext)
+
+        accessEvent.requestHeaderMap shouldBe
+            mapOf(
+                "name1" to "value1",
+                "name2" to "value2",
+                "empty_value" to "",
+            )
+        accessEvent.requestHeaderNames
+            .asIterator()
+            .asSequence()
+            .toList() shouldBe
+            listOf("name1", "name2", "empty_value")
+    }
+
+    @Test
+    fun `test response headers`() {
+        val mockContext = mockk<AccessContext>(relaxed = true)
+        val mockArgProvider = mockk<AccessLogArgProvider>(relaxed = true)
+        every { mockArgProvider.responseHeaderIterator() } returns headerListIterator()
+
+        val accessEvent = AccessEvent(mockArgProvider, mockContext)
+
+        accessEvent.responseHeaderMap shouldBe
+            mapOf(
+                "name1" to "value1",
+                "name2" to "value2",
+                "empty_value" to "",
+            )
+        accessEvent.responseHeaderNameList shouldBe
+            listOf("name1", "name2", "empty_value")
+    }
+
+    @Test
     fun `test serialization`() {
         val mockContext = mockk<AccessContext>(relaxed = true)
         val mockArgProvider = mockk<AccessLogArgProvider>()
@@ -422,6 +464,7 @@ class AccessEventTests {
         accessEvent.getRequestHeader(HEADER) shouldBe NA
         accessEvent.getResponseHeader(HEADER) shouldBe NA
         accessEvent.requestHeaderMap.isEmpty() shouldBe true
+        accessEvent.requestHeaderNames.hasMoreElements() shouldBe false
         accessEvent.responseHeaderMap.isEmpty() shouldBe true
         accessEvent.responseHeaderNameList.isEmpty() shouldBe true
         accessEvent.cookies.isEmpty() shouldBe true

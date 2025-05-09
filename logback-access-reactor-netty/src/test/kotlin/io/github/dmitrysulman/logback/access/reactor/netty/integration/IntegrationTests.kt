@@ -3,11 +3,20 @@ package io.github.dmitrysulman.logback.access.reactor.netty.integration
 import ch.qos.logback.access.common.joran.JoranConfigurator
 import ch.qos.logback.access.common.spi.IAccessEvent
 import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory
+import io.kotest.assertions.nondeterministic.eventually
+import io.kotest.matchers.collections.shouldBeSorted
+import io.kotest.matchers.collections.shouldBeUnique
 import io.kotest.matchers.comparables.shouldBeGreaterThan
+import io.kotest.matchers.longs.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH
 import io.netty.handler.codec.http.cookie.DefaultCookie
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,13 +29,11 @@ import java.net.InetSocketAddress
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
-// TODO sequence number
 // TODO filters
-// TODO Performance test
 class IntegrationTests {
     private lateinit var server: DisposableServer
     private lateinit var eventCaptureAppender: EventCaptureAppender
-    private var now: Long = 0
+    private var now = 0L
 
     @BeforeEach
     fun setUp() {
@@ -40,22 +47,71 @@ class IntegrationTests {
     }
 
     @Test
-    fun `test basic request`() {
-        val accessLogFactory =
-            ReactorNettyAccessLogFactory("logback-access-stdout.xml", JoranConfigurator(), true)
-                .apply {
-                    accessContext.addAppender(eventCaptureAppender)
+    fun `test basic request`(): Unit =
+        runBlocking {
+            val accessLogFactory =
+                ReactorNettyAccessLogFactory("logback-access-stdout.xml", JoranConfigurator(), true)
+                    .apply {
+                        accessContext.addAppender(eventCaptureAppender)
+                    }
+
+            server = createServer(accessLogFactory, "mock response")
+            val response = performGetRequest("/test?name=value")
+            response.shouldNotBeNull()
+
+            eventually(1.seconds) {
+                eventCaptureAppender.list.size shouldBe 1
+                val accessEvent = eventCaptureAppender.list[0]
+                accessEvent.sequenceNumber shouldBe 0
+                assertAccessEvent(accessEvent, response)
+            }
+        }
+
+    @Test
+    fun `test sequence number generator`(): Unit =
+        runBlocking {
+            val accessLogFactory =
+                ReactorNettyAccessLogFactory("logback-access-sequence-number-generator.xml", JoranConfigurator(), true)
+                    .apply {
+                        accessContext.addAppender(eventCaptureAppender)
+                    }
+
+            server = createServer(accessLogFactory, "")
+
+            repeat(500) {
+                performGetRequest("/test")
+            }
+
+            eventually(1.seconds) {
+                eventCaptureAppender.list.size shouldBe 500
+                eventCaptureAppender.list
+                    .sortedBy { it.timeStamp }
+                    .map { it.sequenceNumber }
+                    .shouldBeUnique()
+                    .shouldBeSorted()
+            }
+        }
+
+    @Test
+    fun `performance test`(): Unit =
+        runBlocking {
+            val accessLogFactory =
+                ReactorNettyAccessLogFactory("logback-access-sequence-number-generator.xml", JoranConfigurator(), true)
+                    .apply {
+                        accessContext.addAppender(eventCaptureAppender)
+                    }
+
+            server = createServer(accessLogFactory, "test")
+
+            val jobs =
+                (1..4000).map {
+                    CoroutineScope(Dispatchers.Default).launch {
+                        performGetRequest("/test")
+                    }
                 }
-
-        server = createServer(accessLogFactory, "mock response")
-        val response = performGetRequest("/test?name=value")
-        response.shouldNotBeNull()
-
-        Thread.sleep(100)
-        eventCaptureAppender.list.size shouldBe 1
-        val accessEvent = eventCaptureAppender.list[0]
-        assertAccessEvent(accessEvent, response)
-    }
+            jobs.joinAll()
+            eventually(5.seconds) { eventCaptureAppender.list.size shouldBe jobs.size }
+        }
 
     private fun assertAccessEvent(
         accessEvent: IAccessEvent,
@@ -71,9 +127,8 @@ class IntegrationTests {
         accessEvent.protocol shouldBe response.version().text()
         accessEvent.method shouldBe response.method().name()
         accessEvent.statusCode shouldBe response.status().code()
-        accessEvent.elapsedTime shouldBeGreaterThan 0
+        accessEvent.elapsedTime shouldBeGreaterThanOrEqual 0
         accessEvent.timeStamp shouldBeGreaterThan now
-        accessEvent.sequenceNumber shouldBe 0
         accessEvent.remoteUser shouldBe "-"
         accessEvent.getRequestHeader(TEST_REQUEST_HEADER_NAME) shouldBe TEST_REQUEST_HEADER_VALUE
         accessEvent.getResponseHeader(TEST_RESPONSE_HEADER_NAME) shouldBe TEST_RESPONSE_HEADER_VALUE

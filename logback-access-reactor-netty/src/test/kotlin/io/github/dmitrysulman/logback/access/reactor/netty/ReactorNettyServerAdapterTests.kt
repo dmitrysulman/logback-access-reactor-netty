@@ -16,20 +16,19 @@ class ReactorNettyServerAdapterTests {
         every { mockArgProvider.accessDateTime() } returns ZonedDateTime.ofInstant(Instant.ofEpochMilli(1746734856000), ZoneId.of("UTC"))
         every { mockArgProvider.contentLength() } returns 100
         every { mockArgProvider.status() } returns "200"
-        every { mockArgProvider.responseHeaderIterator() } returns
-            listOf(
-                object : Map.Entry<CharSequence, CharSequence> {
-                    override val key = "key"
-                    override val value = "value"
-                },
-            ).iterator()
+        every { mockArgProvider.responseHeaderIterator() } returns headerListIterator()
 
         val reactorNettyServerAdapter = ReactorNettyServerAdapter(mockArgProvider)
 
         reactorNettyServerAdapter.requestTimestamp shouldBe 1746734856000
         reactorNettyServerAdapter.contentLength shouldBe 100
         reactorNettyServerAdapter.statusCode shouldBe 200
-        reactorNettyServerAdapter.buildResponseHeaderMap() shouldBe mapOf("key" to "value")
+        reactorNettyServerAdapter.buildResponseHeaderMap() shouldBe
+            mapOf(
+                "name1" to "value1",
+                "name2" to "value2",
+                "empty_value" to "",
+            )
     }
 
     @Test
