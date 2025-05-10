@@ -2,17 +2,17 @@ package io.github.dmitrysulman.logback.access.reactor.netty
 
 import ch.qos.logback.access.common.spi.ServerAdapter
 import reactor.netty.http.server.logging.AccessLogArgProvider
+import java.io.Serializable
 
 class ReactorNettyServerAdapter(
+    @Transient
     private val argProvider: AccessLogArgProvider,
-) : ServerAdapter {
-    override fun getRequestTimestamp() = argProvider.accessDateTime()?.toInstant()?.toEpochMilli() ?: 0
-
-    override fun getContentLength() = argProvider.contentLength()
-
-    override fun getStatusCode() = argProvider.status()?.toString()?.toIntOrNull() ?: -1
-
-    override fun buildResponseHeaderMap() =
+) : ServerAdapter,
+    Serializable {
+    private val _requestTimestamp by lazy { argProvider.accessDateTime()?.toInstant()?.toEpochMilli() ?: 0 }
+    private val _contentLength by lazy { argProvider.contentLength() }
+    private val _statusCode by lazy { argProvider.status()?.toString()?.toIntOrNull() ?: -1 }
+    private val _responseHeaderMap by lazy {
         argProvider
             .responseHeaderIterator()
             ?.asSequence()
@@ -22,4 +22,13 @@ class ReactorNettyServerAdapter(
                 name.toString() to value.toString()
             }?.toMap()
             ?: emptyMap()
+    }
+
+    override fun getRequestTimestamp() = _requestTimestamp
+
+    override fun getContentLength() = _contentLength
+
+    override fun getStatusCode() = _statusCode
+
+    override fun buildResponseHeaderMap() = _responseHeaderMap
 }

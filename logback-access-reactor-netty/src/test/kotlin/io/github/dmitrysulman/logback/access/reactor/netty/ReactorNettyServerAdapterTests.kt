@@ -1,5 +1,7 @@
 package io.github.dmitrysulman.logback.access.reactor.netty
 
+import io.kotest.matchers.longs.shouldBeZero
+import io.kotest.matchers.maps.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -40,8 +42,8 @@ class ReactorNettyServerAdapterTests {
 
         val reactorNettyServerAdapter = ReactorNettyServerAdapter(mockArgProvider)
 
-        reactorNettyServerAdapter.requestTimestamp shouldBe 0
+        reactorNettyServerAdapter.requestTimestamp.shouldBeZero()
         reactorNettyServerAdapter.statusCode shouldBe -1
-        reactorNettyServerAdapter.buildResponseHeaderMap() shouldBe emptyMap()
+        reactorNettyServerAdapter.buildResponseHeaderMap().shouldBeEmpty()
     }
 }

@@ -23,14 +23,10 @@ repositories {
 }
 
 kotlin {
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_17
-    }
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
 
 java {
-    targetCompatibility = JavaVersion.VERSION_17
     withSourcesJar()
 }
 

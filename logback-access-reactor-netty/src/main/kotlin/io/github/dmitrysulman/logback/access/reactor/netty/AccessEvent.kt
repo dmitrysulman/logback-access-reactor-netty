@@ -3,6 +3,8 @@ package io.github.dmitrysulman.logback.access.reactor.netty
 import ch.qos.logback.access.common.spi.AccessContext
 import ch.qos.logback.access.common.spi.IAccessEvent
 import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import reactor.netty.http.server.logging.AccessLogArgProvider
 import java.io.Serializable
 import java.net.InetSocketAddress
@@ -122,8 +124,7 @@ class AccessEvent(
             ?: emptyMap()
     }
 
-    @Transient
-    private val _serverAdapter = ReactorNettyServerAdapter(argProvider)
+    private val _serverAdapter by lazy { ReactorNettyServerAdapter(argProvider) }
 
     private fun String.decodeCatching() =
         try {
@@ -150,11 +151,12 @@ class AccessEvent(
         responseHeaderMap
         requestHeaderMap
         threadName
+        serverAdapter.requestTimestamp
     }
 
-    override fun getRequest() = null
+    override fun getRequest(): HttpServletRequest? = null
 
-    override fun getResponse() = null
+    override fun getResponse(): HttpServletResponse? = null
 
     override fun getTimeStamp() = _timeStamp
 

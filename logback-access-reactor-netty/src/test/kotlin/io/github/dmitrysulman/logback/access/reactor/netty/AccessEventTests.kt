@@ -1,9 +1,16 @@
 package io.github.dmitrysulman.logback.access.reactor.netty
 
 import ch.qos.logback.access.common.spi.AccessContext
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.longs.shouldBeZero
+import io.kotest.matchers.maps.shouldBeEmpty
 import io.kotest.matchers.maps.shouldContainKey
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -17,6 +24,9 @@ import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.SocketAddress
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.Collections
 import io.netty.handler.codec.http.cookie.Cookie as NettyCookie
 
@@ -142,9 +152,9 @@ class AccessEventTests {
 
         val accessEvent = AccessEvent(mockArgProvider, mockContext)
 
-        accessEvent.requestURI.isEmpty() shouldBe true
-        accessEvent.queryString.isEmpty() shouldBe true
-        accessEvent.requestParameterMap.isEmpty() shouldBe true
+        accessEvent.requestURI.shouldBeEmpty()
+        accessEvent.queryString.shouldBeEmpty()
+        accessEvent.requestParameterMap.shouldBeEmpty()
         accessEvent.getRequestParameter(PARAM) shouldBe NA_ARRAY
     }
 
@@ -157,7 +167,7 @@ class AccessEventTests {
         val accessEvent = AccessEvent(mockArgProvider, mockContext)
 
         accessEvent.queryString shouldBe "?"
-        accessEvent.requestParameterMap.isEmpty() shouldBe true
+        accessEvent.requestParameterMap.shouldBeEmpty()
         accessEvent.getRequestParameter(PARAM) shouldBe NA_ARRAY
     }
 
@@ -169,8 +179,8 @@ class AccessEventTests {
 
         val accessEvent = AccessEvent(mockArgProvider, mockContext)
 
-        accessEvent.queryString.isEmpty() shouldBe true
-        accessEvent.requestParameterMap.isEmpty() shouldBe true
+        accessEvent.queryString.shouldBeEmpty()
+        accessEvent.requestParameterMap.shouldBeEmpty()
         accessEvent.getRequestParameter(PARAM) shouldBe NA_ARRAY
     }
 
@@ -227,7 +237,7 @@ class AccessEventTests {
         val accessEvent = AccessEvent(mockArgProvider, mockContext)
 
         accessEvent.queryString shouldBe "?param1="
-        accessEvent.requestParameterMap.isEmpty() shouldBe true
+        accessEvent.requestParameterMap.shouldBeEmpty()
         accessEvent.getRequestParameter("param1") shouldBe NA_ARRAY
     }
 
@@ -315,10 +325,11 @@ class AccessEventTests {
         accessEvent.remoteUser shouldBe NA
         accessEvent.getRequestHeader(HEADER) shouldBe NA
         accessEvent.getResponseHeader(HEADER) shouldBe NA
-        accessEvent.requestHeaderMap.isEmpty() shouldBe true
-        accessEvent.requestHeaderNames.hasMoreElements() shouldBe false
-        accessEvent.responseHeaderMap.isEmpty() shouldBe true
-        accessEvent.responseHeaderNameList.isEmpty() shouldBe true
+        accessEvent.requestHeaderMap.shouldBeEmpty()
+        accessEvent.requestHeaderNames.hasMoreElements().shouldBeFalse()
+        accessEvent.responseHeaderMap.shouldBeEmpty()
+        accessEvent.responseHeaderNameList.shouldBeEmpty()
+        accessEvent.cookies.shouldBeEmpty()
         accessEvent.getCookie(COOKIE) shouldBe NA
     }
 
@@ -348,6 +359,7 @@ class AccessEventTests {
                         add(DefaultCookie("cookie2", "value21"))
                         add(DefaultCookie("cookie2", "value22"))
                     },
+                "cookie3" to emptySet(),
             )
 
         val accessEvent = AccessEvent(mockArgProvider, mockContext)
@@ -357,6 +369,7 @@ class AccessEventTests {
         accessEvent.cookies shouldContain Cookie("cookie2", "value21")
         accessEvent.getCookie("cookie1") shouldBe "value1"
         accessEvent.getCookie("cookie2") shouldBe "value21"
+        accessEvent.getCookie("cookie3") shouldBe NA
         accessEvent.getCookie("not_exist") shouldBe NA
     }
 
@@ -451,7 +464,7 @@ class AccessEventTests {
         accessEvent.getRequestParameter("no_param") shouldBe NA_ARRAY
         accessEvent.protocol shouldBe HTTP11
         accessEvent.requestURL shouldBe "$GET $REQUEST_URI$QUERY_STRING $HTTP11"
-        accessEvent.statusCode shouldBe OK.toInt()
+        accessEvent.statusCode shouldBe OK_STATUS_CODE.toInt()
         accessEvent.contentLength shouldBe CONTENT_LENGTH
         accessEvent.elapsedTime shouldBe DURATION
         accessEvent.elapsedSeconds shouldBe DURATION_SECONDS
@@ -460,22 +473,27 @@ class AccessEventTests {
         accessEvent.serverName shouldBe IP_ADDRESS
         accessEvent.localPort shouldBe PORT
         accessEvent.remoteUser shouldBe USERNAME
-        accessEvent.sequenceNumber shouldBe 0
+        accessEvent.sequenceNumber.shouldBeZero()
         accessEvent.getRequestHeader(HEADER) shouldBe NA
         accessEvent.getResponseHeader(HEADER) shouldBe NA
-        accessEvent.requestHeaderMap.isEmpty() shouldBe true
-        accessEvent.requestHeaderNames.hasMoreElements() shouldBe false
-        accessEvent.responseHeaderMap.isEmpty() shouldBe true
-        accessEvent.responseHeaderNameList.isEmpty() shouldBe true
-        accessEvent.cookies.isEmpty() shouldBe true
+        accessEvent.requestHeaderMap.shouldBeEmpty()
+        accessEvent.requestHeaderNames.hasMoreElements().shouldBeFalse()
+        accessEvent.responseHeaderMap.shouldBeEmpty()
+        accessEvent.responseHeaderNameList.shouldBeEmpty()
+        accessEvent.cookies.shouldBeEmpty()
         accessEvent.getCookie(COOKIE) shouldBe NA
         accessEvent.threadName shouldBe THREAD
-        accessEvent.request shouldBe null
-        accessEvent.response shouldBe null
+        accessEvent.request.shouldBeNull()
+        accessEvent.response.shouldBeNull()
         accessEvent.sessionID shouldBe NA
         accessEvent.getAttribute(ATTRIBUTE) shouldBe NA
-        accessEvent.requestContent.isEmpty() shouldBe true
-        accessEvent.responseContent.isEmpty() shouldBe true
+        accessEvent.requestContent.shouldBeEmpty()
+        accessEvent.responseContent.shouldBeEmpty()
+        accessEvent.serverAdapter.shouldNotBeNull()
+        accessEvent.serverAdapter.requestTimestamp shouldBe TIMESTAMP
+        accessEvent.serverAdapter.contentLength shouldBe CONTENT_LENGTH
+        accessEvent.serverAdapter.statusCode shouldBe OK_STATUS_CODE.toInt()
+        accessEvent.serverAdapter.buildResponseHeaderMap().shouldBeEmpty()
     }
 
     private fun mockArgProvider(mockArgProvider: AccessLogArgProvider) {
@@ -488,10 +506,11 @@ class AccessEventTests {
         every { mockArgProvider.method() } returns GET
         every { mockArgProvider.uri() } returns "$REQUEST_URI$QUERY_STRING"
         every { mockArgProvider.protocol() } returns HTTP11
-        every { mockArgProvider.status() } returns OK
+        every { mockArgProvider.status() } returns OK_STATUS_CODE
         every { mockArgProvider.contentLength() } returns CONTENT_LENGTH
         every { mockArgProvider.duration() } returns DURATION
         every { mockArgProvider.user() } returns USERNAME
+        every { mockArgProvider.accessDateTime() } returns ZonedDateTime.ofInstant(Instant.ofEpochMilli(TIMESTAMP), ZoneId.of("UTC"))
         every { mockArgProvider.requestHeaderIterator() } returns Collections.emptyIterator()
         every { mockArgProvider.responseHeaderIterator() } returns Collections.emptyIterator()
         every { mockArgProvider.cookies() } returns emptyMap()
@@ -503,7 +522,7 @@ class AccessEventTests {
         private val NA_ARRAY = arrayOf(NA)
         private const val GET = "GET"
         private const val HTTP11 = "HTTP/1.1"
-        private const val OK = "200"
+        private const val OK_STATUS_CODE = "200"
         private const val IP_ADDRESS = "192.168.1.1"
         private const val USERNAME = "username"
         private const val PORT = 1000
@@ -518,5 +537,6 @@ class AccessEventTests {
         private const val REQUEST_URI = "/test"
         private const val QUERY_STRING = "?param=value"
         private const val DURATION_SECONDS = 1L
+        private const val TIMESTAMP = 1746734856000
     }
 }

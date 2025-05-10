@@ -1,0 +1,4 @@
+<configuration>
+    <appender name="URL" class="io.github.dmitrysulman.logback.access.reactor.netty.integration.EventCaptureAppender" />
+    <appender-ref ref="URL" />
+</configuration>
