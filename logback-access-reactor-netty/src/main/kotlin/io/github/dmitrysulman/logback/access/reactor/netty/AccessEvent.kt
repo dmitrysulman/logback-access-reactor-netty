@@ -2,6 +2,9 @@ package io.github.dmitrysulman.logback.access.reactor.netty
 
 import ch.qos.logback.access.common.spi.AccessContext
 import ch.qos.logback.access.common.spi.IAccessEvent
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import reactor.netty.http.server.logging.AccessLogArgProvider
 import java.io.Serializable
 import java.net.InetSocketAddress
@@ -37,7 +40,7 @@ class AccessEvent(
     private val _sequenceNumber = context.sequenceNumberGenerator?.nextSequenceNumber() ?: 0
     private val _elapsedTime = argProvider.duration()
     private val _elapsedTimeSeconds = _elapsedTime / 1000
-    private val _requestUri by lazy { argProvider.uri()?.toString()?.substringBefore("?") ?: NA }
+    private val _requestPath by lazy { argProvider.uri()?.toString()?.substringBefore("?") ?: NA }
     private val _queryString by lazy {
         argProvider.uri()?.let { uri ->
             uri
@@ -47,6 +50,7 @@ class AccessEvent(
                 .orEmpty()
         } ?: NA
     }
+    private val _requestUrl by lazy { "$_method ${argProvider.uri()?.toString() ?: NA} $_protocol" }
     private val _remoteHost by lazy {
         val remoteAddress = argProvider.connectionInformation()?.connectionRemoteAddress()
         if (remoteAddress is InetSocketAddress) {
@@ -58,22 +62,19 @@ class AccessEvent(
     private val _remoteUser by lazy { argProvider.user() ?: NA }
     private val _protocol by lazy { argProvider.protocol() ?: NA }
     private val _method by lazy { argProvider.method()?.toString() ?: NA }
-    private lateinit var _threadName: String
+    private var _threadName: String? = null
     private val _requestParameterMap by lazy {
         _queryString
-            .takeIf { it.isNotEmpty() && it != NA }
+            .takeIf { it.length > 1 }
             ?.substring(1)
             ?.split("&")
+            ?.asSequence()
             ?.mapNotNull {
                 val index = it.indexOf("=")
-                if (index in 1..it.length - 2) {
-                    it.substring(0, index) to it.substring(index + 1)
-                } else {
-                    null
-                }
-            }?.groupBy({ URLDecoder.decode(it.first, StandardCharsets.UTF_8) }) {
-                URLDecoder.decode(it.second, StandardCharsets.UTF_8)
-            }?.mapValues { it.value.toTypedArray() }
+                if (index !in 1..it.length - 2) return@mapNotNull null
+                it.substring(0, index) to it.substring(index + 1)
+            }?.groupBy({ it.first.decodeCatching() }) { it.second.decodeCatching() }
+            ?.mapValues { it.value.toTypedArray() }
             ?: emptyMap()
     }
     private val _remoteAddr by lazy {
@@ -85,9 +86,27 @@ class AccessEvent(
         } ?: NA
     }
     private val _cookieMap by lazy {
-        argProvider.cookies()?.entries?.associate {
-            it.key.toString() to (it.value.firstOrNull()?.value() ?: NA)
-        } ?: emptyMap()
+        argProvider
+            .cookies()
+            ?.asSequence()
+            ?.mapNotNull { (name, values) ->
+                if (name.isNullOrBlank()) return@mapNotNull null
+                val value = values.firstOrNull()?.value() ?: return@mapNotNull null
+                name.toString() to value
+            }?.toMap() ?: emptyMap()
+    }
+    private val _cookieList by lazy {
+        argProvider
+            .cookies()
+            ?.mapNotNull { (name, values) ->
+                if (name.isNullOrBlank()) return@mapNotNull null
+                val value = values.firstOrNull()?.value() ?: return@mapNotNull null
+                try {
+                    Cookie(name.toString(), value)
+                } catch (_: Exception) {
+                    null
+                }
+            } ?: emptyList()
     }
     private val _contentLength by lazy { _serverAdapter.contentLength }
     private val _statusCode by lazy { _serverAdapter.statusCode }
@@ -97,15 +116,26 @@ class AccessEvent(
         argProvider
             .requestHeaderIterator()
             ?.asSequence()
-            ?.associate { it.key.toString() to it.value.toString() }
+            ?.mapNotNull { (name, value) ->
+                if (name.isNullOrEmpty()) return@mapNotNull null
+                if (value == null) return@mapNotNull null
+                name.toString() to value.toString()
+            }?.toMap()
             ?: emptyMap()
     }
 
-    @Transient
-    private val _serverAdapter = ReactorNettyServerAdapter(argProvider)
+    private val _serverAdapter by lazy { ReactorNettyServerAdapter(argProvider) }
+
+    private fun String.decodeCatching() =
+        try {
+            URLDecoder.decode(this, StandardCharsets.UTF_8)
+        } catch (_: Exception) {
+            this
+        }
 
     override fun prepareForDeferredProcessing() {
         requestURI
+        requestURL
         queryString
         remoteHost
         remoteUser
@@ -114,16 +144,19 @@ class AccessEvent(
         requestParameterMap
         remoteAddr
         getCookieMap()
+        cookies
         contentLength
         statusCode
         localPort
         responseHeaderMap
         requestHeaderMap
+        threadName
+        serverAdapter.requestTimestamp
     }
 
-    override fun getRequest() = null
+    override fun getRequest(): HttpServletRequest? = null
 
-    override fun getResponse() = null
+    override fun getResponse(): HttpServletResponse? = null
 
     override fun getTimeStamp() = _timeStamp
 
@@ -133,9 +166,9 @@ class AccessEvent(
 
     override fun getElapsedSeconds() = _elapsedTimeSeconds
 
-    override fun getRequestURI() = _requestUri
+    override fun getRequestURI() = _requestPath
 
-    override fun getRequestURL() = "$_method $_requestUri$_queryString $_protocol"
+    override fun getRequestURL() = _requestUrl
 
     override fun getRemoteHost() = _remoteHost
 
@@ -171,6 +204,8 @@ class AccessEvent(
 
     override fun getRequestParameter(key: String) = _requestParameterMap[key] ?: NA_ARRAY
 
+    override fun getCookies() = _cookieList
+
     private fun getCookieMap() = _cookieMap
 
     override fun getCookie(key: String) = getCookieMap()[key] ?: NA
@@ -189,7 +224,7 @@ class AccessEvent(
 
     override fun getResponseHeader(key: String) = _responseHeaderMap[key] ?: NA
 
-    override fun getResponseHeaderMap(): Map<String, String> = _responseHeaderMap
+    override fun getResponseHeaderMap() = _responseHeaderMap
 
     override fun getResponseHeaderNameList() = _responseHeaderMap.keys.toList()
 

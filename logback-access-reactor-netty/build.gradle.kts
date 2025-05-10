@@ -11,6 +11,8 @@ dependencies {
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.assertions.core.jvm)
+    testImplementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.kotlinx.coroutines.reactor)
     testImplementation(libs.logback.classic)
     testImplementation(libs.logback.core)
     testImplementation(libs.mockk)
