@@ -9,8 +9,6 @@ plugins {
     `maven-publish`
 }
 
-group = "io.github.dmitrysulman"
-
 repositories {
     mavenCentral()
     maven {
@@ -56,6 +54,7 @@ val dokkaJavadocJar by tasks.registering(Jar::class) {
 publishing {
     publications {
         create<MavenPublication>("maven") {
+            groupId = rootProject.group as String
             from(components["java"])
             artifact(dokkaJavadocJar)
             pom {
