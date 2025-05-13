@@ -23,7 +23,7 @@ This library serves as a bridge between the Reactor Netty HTTP logging mechanism
 
 - Java 17+
 - Logback-access 2.0.6
-- Reactor Netty HTTP Server 1.2.6-SNAPSHOT
+- Reactor Netty HTTP Server 1.2.6
 - SLF4J 2.0.17
 
 ## Usage
