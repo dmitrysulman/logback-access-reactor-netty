@@ -1,5 +1,6 @@
 # Logback Access for Reactor Netty
-
+[![Maven Central Version](https://img.shields.io/maven-central/v/io.github.dmitrysulman/logback-access-reactor-netty)](https://central.sonatype.com/artifact/io.github.dmitrysulman/logback-access-reactor-netty)
+[![Release to Maven Central](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/release.yml/badge.svg)](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/release.yml)
 [![Build](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/build.yml/badge.svg)](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty/graph/badge.svg?token=LOEJQ7K8Z7)](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty)
 [![CodeQL](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/codeql.yml/badge.svg)](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/codeql.yml)
@@ -27,6 +28,20 @@ This library serves as a bridge between the Reactor Netty HTTP logging mechanism
 - SLF4J 2.0.17
 
 ## Usage
+
+### Adding dependency
+#### Maven
+```
+<dependency>
+    <groupId>io.github.dmitrysulman</groupId>
+    <artifactId>logback-access-reactor-netty</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
+#### Gradle
+```
+implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.0.1")
+```
 
 ### Basic Setup
 ```java
