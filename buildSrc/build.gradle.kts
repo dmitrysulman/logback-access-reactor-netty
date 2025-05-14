@@ -12,6 +12,8 @@ kotlin {
 }
 
 dependencies {
+    implementation(platform(libs.jackson.bom))
+
     implementation(libs.dokka.gradlePlugin)
     implementation(libs.dokka.javadocPlugin)
     implementation(libs.kotlin.gradlePlugin)
