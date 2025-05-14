@@ -28,9 +28,8 @@ java {
 }
 
 tasks.build {
-    dependsOn(tasks.test)
+    dependsOn(tasks.check)
     dependsOn(tasks.jacocoTestReport)
-    dependsOn(tasks.ktlintCheck)
 }
 
 tasks.withType<Test>().configureEach {
