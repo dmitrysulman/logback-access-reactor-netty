@@ -23,6 +23,7 @@ This library serves as a bridge between the Reactor Netty HTTP logging mechanism
 ## Dependencies
 
 - Java 17+
+- Kotlin Standard Library 2.1.20
 - Logback-access 2.0.6
 - Reactor Netty HTTP Server 1.2.6
 - SLF4J 2.0.17
@@ -57,15 +58,34 @@ HttpServer.create()
 
 The library can be configured in several ways:
 
-1. Default configuration: Uses `logback-access.xml` in the classpath
-2. System property: Set `logback.access.reactor.netty.config` to specify configuration file location
-3. Programmatic configuration: Provide configuration file URL or filename directly
+1. **Default configuration** uses `logback-access.xml` file in the classpath.
+2. **System property.** Set `-Dlogback.access.reactor.netty.config` property to specify configuration file location.
+3. **Programmatic configuration.** Provide configuration file filename or URL of the resource directly:
 ```java
-// Using specific configuration file
-ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory("custom-config.xml");
+// Using specific configuration file by the filename
+ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory("/path/to/logback-access.xml");
+
+// Using specific configuration file as a classpath resource
+ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory(
+        this.getClass().getClassLoader().getResource("custom-logback-access.xml")
+);
+
 // Enable debug mode
-ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory("config.xml", new JoranConfigurator(), true);
+ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory("logback-access.xml", new JoranConfigurator(), true);
 ```
+
+### Spring Boot configuration
+```java
+@Configuration
+public class NettyAccessLogConfiguration {
+    @Bean
+    public NettyServerCustomizer accessLogNettyServerCustomizer() {
+        return (server) ->
+                server.accessLog(true, new ReactorNettyAccessLogFactory("path/to/your/logback-access.xml"));
+    }
+}
+```
+
 
 ## Author
 
