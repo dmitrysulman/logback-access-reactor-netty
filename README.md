@@ -1,9 +1,9 @@
 # Logback Access for Reactor Netty
 [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.dmitrysulman/logback-access-reactor-netty)](https://central.sonatype.com/artifact/io.github.dmitrysulman/logback-access-reactor-netty)
-[![Release to Maven Central](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/release.yml/badge.svg)](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/release.yml)
+[![javadoc](https://javadoc.io/badge2/io.github.dmitrysulman/logback-access-reactor-netty/javadoc.svg)](https://javadoc.io/doc/io.github.dmitrysulman/logback-access-reactor-netty)
 [![Build](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/build.yml/badge.svg)](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/build.yml)
-[![codecov](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty/graph/badge.svg?token=LOEJQ7K8Z7)](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty)
 [![CodeQL](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/codeql.yml/badge.svg)](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/codeql.yml)
+[![codecov](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty/graph/badge.svg?token=LOEJQ7K8Z7)](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty)
 
 A library that integrates Logback Access with Reactor Netty HTTP server, providing comprehensive access logging capabilities.
 
