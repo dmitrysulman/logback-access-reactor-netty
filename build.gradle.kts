@@ -30,6 +30,9 @@ tasks.jar {
 jreleaser {
     release {
         github {
+            changelog {
+                enabled = false
+            }
             skipTag = true
             skipRelease = true
             token = "-"

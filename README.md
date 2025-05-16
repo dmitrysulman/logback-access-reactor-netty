@@ -17,15 +17,15 @@ This library serves as a bridge between the Reactor Netty HTTP logging mechanism
 - Comprehensive HTTP request/response logging
 - Lazy-loaded access event properties for optimal performance
 - Support for headers, cookies, and request parameters logging
-- Debug mode for troubleshooting
 - Configurable through system properties or external configuration files
+- Debug mode for troubleshooting
 
 ## Dependencies
 
 - Java 17+
-- Kotlin Standard Library 2.1.20
-- Logback-access 2.0.6
+- Kotlin Standard Library 2.1.21
 - Reactor Netty HTTP Server 1.2.6
+- Logback-access 2.0.6
 - SLF4J 2.0.17
 
 ## Usage
