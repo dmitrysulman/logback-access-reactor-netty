@@ -1,3 +1,4 @@
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
@@ -8,6 +9,9 @@ plugins {
     jacoco
     `maven-publish`
 }
+
+// https://github.com/gradle/gradle/issues/15383#issuecomment-779893192
+val libs = the<LibrariesForLibs>()
 
 repositories {
     mavenCentral()
@@ -20,7 +24,7 @@ repositories {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(libs.versions.java.get().toInt())
 }
 
 java {
@@ -48,6 +52,31 @@ val dokkaJavadocJar by tasks.registering(Jar::class) {
     dependsOn(tasks.dokkaGeneratePublicationJavadoc)
     from(tasks.dokkaGeneratePublicationJavadoc.flatMap { it.outputDirectory })
     archiveClassifier.set("javadoc")
+}
+
+dokka {
+    dokkaSourceSets.configureEach {
+        includes.from("./src/main/resources/dokka/Module.md")
+        sourceLink {
+            localDirectory.set(file("src/main/kotlin"))
+            remoteUrl("https://github.com/dmitrysulman/logback-access-reactor-netty/tree/main/${project.name}/src/main/kotlin")
+            remoteLineSuffix.set("#L")
+        }
+        externalDocumentationLinks {
+            register("reactor-netty-docs") {
+                url("https://javadoc.io/doc/io.projectreactor.netty/reactor-netty-http/${libs.versions.reactorNetty.get()}/")
+                packageListUrl("https://javadoc.io/doc/io.projectreactor.netty/reactor-netty-http/${libs.versions.reactorNetty.get()}/package-list")
+            }
+            register("logback-access-docs") {
+                url("https://javadoc.io/doc/ch.qos.logback.access/logback-access-common/${libs.versions.logbackAccess.get()}/")
+                packageListUrl("https://javadoc.io/doc/ch.qos.logback.access/logback-access-common/${libs.versions.logbackAccess.get()}/element-list")
+            }
+            register("logback-core-docs") {
+                url("https://javadoc.io/doc/ch.qos.logback/logback-core/${libs.versions.logbackClassic.get()}/")
+                packageListUrl("https://javadoc.io/doc/ch.qos.logback/logback-core/${libs.versions.logbackClassic.get()}/element-list")
+            }
+        }
+    }
 }
 
 publishing {
@@ -100,7 +129,7 @@ tasks.jacocoTestReport {
 }
 
 configure<KtlintExtension> {
-    version = "1.5.0"
+    version = libs.versions.ktlint
     additionalEditorconfig.set(
         mapOf(
             "ktlint_standard_backing-property-naming" to "disabled"

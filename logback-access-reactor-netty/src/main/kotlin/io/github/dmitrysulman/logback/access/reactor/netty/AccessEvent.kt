@@ -18,13 +18,14 @@ import java.util.Enumeration
  * This class implements the Logback Access [IAccessEvent] interface to provide detailed information about access logs,
  * including request and response data, headers, cookies, and contextual information.
  *
- * @constructor Initializes an [AccessEvent] instance with the given [AccessLogArgProvider] and [AccessContext].
- * The [AccessLogArgProvider] supplies information about the HTTP request and response to populate the event's details.
- * The [AccessContext] facilitates access logging within the specified context.
- *
  * This class includes various lazy-loaded properties to efficiently retrieve detailed information about
  * the request and response only when needed. It supports deferred processing of logging data through
  * the `prepareForDeferredProcessing` method, ensuring all necessary attributes are initialized.
+ *
+ * @constructor Initializes an [AccessEvent] instance with the given [AccessLogArgProvider] and [AccessContext].
+ *
+ * The [AccessLogArgProvider] supplies information about the HTTP request and response to populate the event's details.
+ * The [AccessContext] facilitates access logging within the specified context.
  *
  * @author Dmitry Sulman
  * @see IAccessEvent

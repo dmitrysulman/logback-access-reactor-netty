@@ -17,6 +17,7 @@ import reactor.netty.http.server.logging.AccessLog as ReactorAccessLog
  * access-related information.
  *
  * @constructor Initializes an [AccessLog] instance with the given [AccessContext] and [AccessLogArgProvider].
+ *
  * The [AccessContext] facilitates access logging within the specified context.
  * The [AccessLogArgProvider] supplies information about the HTTP request and response to populate the event's details.
  *

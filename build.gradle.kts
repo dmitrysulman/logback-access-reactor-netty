@@ -1,7 +1,6 @@
 plugins {
     kotlin("jvm")
     alias(libs.plugins.dokka)
-    alias(libs.plugins.dokka.javadoc)
     alias(libs.plugins.jreleaser)
 }
 

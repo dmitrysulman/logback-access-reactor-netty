@@ -111,7 +111,7 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
      * Primary constructor for the [ReactorNettyAccessLogFactory] class.
      *
      * Initializes the access log factory with the configuration file, a new [JoranConfigurator] instance,
-     * and debug mode set to `false`.The configuration file is taken from the `logback.access.reactor.netty.config`
+     * and debug mode set to `false`. The configuration file is taken from the `logback.access.reactor.netty.config`
      * system property or from the `logback-access.xml` file if the property is not set. If no default configuration
      * file is found, initialization will skip configuration steps.
      */

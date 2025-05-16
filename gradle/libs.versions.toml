@@ -1,11 +1,13 @@
 [versions]
 dokka = "2.0.0"
 jackson = "2.19.0"
+java = "17"
 jreleaser = "1.18.0"
 junit = "5.12.2"
 kotest = "5.9.1"
 kotlin = "2.1.21"
 kotlinxCoroutines = "1.10.2"
+ktlint = "1.5.0"
 ktlintPlugin = "12.2.0"
 logbackAccess = "2.0.6"
 logbackClassic = "1.5.18"
@@ -14,24 +16,22 @@ reactorNetty = "1.2.6"
 slf4j = "2.0.17"
 
 [libraries]
-dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
-dokka-javadocPlugin = { group = "org.jetbrains.dokka-javadoc", name = "org.jetbrains.dokka-javadoc.gradle.plugin", version.ref = "dokka" }
-jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" } # Override the old jackson version that comes with dokka
+dokka-plugin = { group = "org.jetbrains.dokka", name = "org.jetbrains.dokka.gradle.plugin", version.ref = "dokka" }
+dokka-javadoc-plugin = { group = "org.jetbrains.dokka-javadoc", name = "org.jetbrains.dokka-javadoc.gradle.plugin", version.ref = "dokka" }
+jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
 junit-platformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 kotest-assertions-core-jvm = { group = "io.kotest", name = "kotest-assertions-core-jvm", version.ref = "kotest" }
-kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-plugin = { group = "org.jetbrains.kotlin.jvm", name = "org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-reactor = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactor", version.ref = "kotlinxCoroutines" }
-ktlintPlugin = { group = "org.jlleitschuh.gradle.ktlint", name = "org.jlleitschuh.gradle.ktlint.gradle.plugin", version.ref = "ktlintPlugin" }
+ktlint-plugin = { group = "org.jlleitschuh.gradle.ktlint", name = "org.jlleitschuh.gradle.ktlint.gradle.plugin", version.ref = "ktlintPlugin" }
 logback-access-common = { group = "ch.qos.logback.access", name = "logback-access-common", version.ref = "logbackAccess" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logbackClassic" }
-logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logbackClassic" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 reactorNetty-http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "reactorNetty" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 
 [plugins]
 dokka = { id = "org.jetbrains.dokka" }
-dokka-javadoc = { id = "org.jetbrains.dokka-javadoc" }
 jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
