@@ -31,7 +31,9 @@ This library serves as a bridge between the Reactor Netty HTTP logging mechanism
 ## Usage
 
 ### Adding dependency
+
 #### Maven
+
 ```
 <dependency>
     <groupId>io.github.dmitrysulman</groupId>
@@ -39,12 +41,17 @@ This library serves as a bridge between the Reactor Netty HTTP logging mechanism
     <version>1.0.1</version>
 </dependency>
 ```
+
 #### Gradle
+
 ```
 implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.0.1")
 ```
 
 ### Basic Setup
+
+#### Java
+
 ```java
 ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory();
 HttpServer.create()
@@ -52,6 +59,17 @@ HttpServer.create()
           .bindNow()
           .onDispose()
           .block();
+```
+
+#### Kotlin
+
+```kotlin
+val factory = ReactorNettyAccessLogFactory()
+HttpServer.create()
+          .enableLogbackAccess(factory)
+          .bindNow()
+          .onDispose()
+          .block()
 ```
 
 ### Configuration
@@ -63,18 +81,18 @@ The library can be configured in several ways:
 3. **Programmatic configuration.** Provide configuration file filename or URL of the resource directly:
 ```java
 // Using specific configuration file by the filename
-ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory("/path/to/logback-access.xml");
+var factory = new ReactorNettyAccessLogFactory("/path/to/logback-access.xml");
 
 // Using specific configuration file as a classpath resource
-ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory(
+var factory = new ReactorNettyAccessLogFactory(
         this.getClass().getClassLoader().getResource("custom-logback-access.xml")
 );
-
-// Enable debug mode
-ReactorNettyAccessLogFactory factory = new ReactorNettyAccessLogFactory("logback-access.xml", new JoranConfigurator(), true);
 ```
 
 ### Spring Boot configuration
+
+#### Java
+
 ```java
 @Configuration
 public class NettyAccessLogConfiguration {
@@ -86,6 +104,23 @@ public class NettyAccessLogConfiguration {
 }
 ```
 
+#### Kotlin
+
+```kotlin
+@Configuration
+class NettyAccessLogConfiguration {
+    @Bean
+    fun accessLogNettyServerCustomizer() = 
+        NettyServerCustomizer { server ->
+            server.enableLogbackAccess(ReactorNettyAccessLogFactory("path/to/your/logback-access.xml"))
+        }
+}
+```
+
+## Documentation
+
+- [Java API (Javadoc)](https://javadoc.io/doc/io.github.dmitrysulman/logback-access-reactor-netty/latest/index.html)
+- [Kotlin API (KDoc)](https://dmitrysulman.github.io/logback-access-reactor-netty/)
 
 ## Author
 
