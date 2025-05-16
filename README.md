@@ -5,11 +5,15 @@
 [![CodeQL](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/codeql.yml/badge.svg)](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/codeql.yml)
 [![codecov](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty/graph/badge.svg?token=LOEJQ7K8Z7)](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty)
 
-A library that integrates Logback Access with Reactor Netty HTTP server, providing comprehensive access logging capabilities.
+A Java/Kotlin library that integrates Logback Access with Reactor Netty HTTP server, providing comprehensive access logging capabilities.
 
 ## Overview
 
-This library serves as a bridge between the Reactor Netty HTTP logging mechanism and the Logback Access library. It enables detailed HTTP access logging with configurable formats, filters, and appenders through Logback Access configuration.
+**Reactor Netty HTTP Server** is a non-blocking, asynchronous server built on the Netty networking framework and used as the default runtime for handling HTTP requests in Spring WebFlux. It enables reactive, event-driven processing of web requests, making it well-suited for scalable and high-throughput applications. In Spring Boot, it's automatically configured when building reactive applications with the `spring-boot-starter-webflux` dependency.
+
+**Logback Access** is a module of the Logback logging framework that provides HTTP access logging capabilities, similar to those in servlet containers like Tomcat or Jetty. It allows logging of incoming HTTP requests and responses using customizable patterns and supports easy configuration through an XML file.
+
+**Logback Access for Reactor Netty** library serves as a bridge between the Reactor Netty HTTP logging mechanism and the Logback Access library. It enables detailed HTTP access logging with configurable formats, filters, and appenders through Logback Access configuration.
 
 ## Features
 
@@ -38,14 +42,14 @@ This library serves as a bridge between the Reactor Netty HTTP logging mechanism
 <dependency>
     <groupId>io.github.dmitrysulman</groupId>
     <artifactId>logback-access-reactor-netty</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
 #### Gradle
 
 ```
-implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.0.1")
+implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.0.2")
 ```
 
 ### Basic Setup
@@ -76,7 +80,7 @@ HttpServer.create()
 
 The library can be configured in several ways:
 
-1. **Default configuration** uses `logback-access.xml` file in the classpath.
+1. **Default configuration** uses `logback-access.xml` file on the classpath.
 2. **System property.** Set `-Dlogback.access.reactor.netty.config` property to specify configuration file location.
 3. **Programmatic configuration.** Provide configuration file filename or URL of the resource directly:
 ```java
@@ -105,7 +109,6 @@ public class NettyAccessLogConfiguration {
 ```
 
 #### Kotlin
-
 ```kotlin
 @Configuration
 class NettyAccessLogConfiguration {
@@ -116,6 +119,7 @@ class NettyAccessLogConfiguration {
         }
 }
 ```
+See [enableLogbackAccess()](https://dmitrysulman.github.io/logback-access-reactor-netty/logback-access-reactor-netty/io.github.dmitrysulman.logback.access.reactor.netty/enable-logback-access.html) extension function documentation.
 
 ## Documentation
 
@@ -128,5 +132,5 @@ class NettyAccessLogConfiguration {
 
 ## See Also
 
-- [Logback Access Documentation](https://logback.qos.ch/access.html)
 - [Reactor Netty HTTP Server Documentation](https://projectreactor.io/docs/netty/release/reference/http-server.html)
+- [Logback Access Documentation](https://logback.qos.ch/access.html)
