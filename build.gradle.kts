@@ -1,5 +1,7 @@
 plugins {
     kotlin("jvm")
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.dokka.javadoc)
     alias(libs.plugins.jreleaser)
 }
 
@@ -10,11 +12,19 @@ repositories {
 
 group = "io.github.dmitrysulman"
 
+dependencies {
+    dokka(project("logback-access-reactor-netty"))
+}
+
 tasks.jreleaserFullRelease {
     subprojects.forEach {
         val copyStagingDeployToRoot by it.tasks.existing
         dependsOn(copyStagingDeployToRoot)
     }
+}
+
+tasks.jar {
+    enabled = false
 }
 
 jreleaser {
