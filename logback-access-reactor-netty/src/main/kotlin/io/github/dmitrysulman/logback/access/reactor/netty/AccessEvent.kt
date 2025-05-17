@@ -37,7 +37,7 @@ class AccessEvent(
     context: AccessContext,
 ) : IAccessEvent,
     Serializable {
-    private val _timeStamp = System.currentTimeMillis()
+    private val _timeStamp by lazy { _serverAdapter.requestTimestamp }
     private val _sequenceNumber = context.sequenceNumberGenerator?.nextSequenceNumber() ?: 0
     private val _elapsedTime = argProvider.duration()
     private val _elapsedTimeSeconds = _elapsedTime / 1000
@@ -152,7 +152,7 @@ class AccessEvent(
         responseHeaderMap
         requestHeaderMap
         threadName
-        serverAdapter.requestTimestamp
+        timeStamp
     }
 
     override fun getRequest(): HttpServletRequest? = null

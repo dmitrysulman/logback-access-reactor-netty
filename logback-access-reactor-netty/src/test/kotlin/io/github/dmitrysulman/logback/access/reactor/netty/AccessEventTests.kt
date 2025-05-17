@@ -54,6 +54,7 @@ class AccessEventTests {
 
         verify(exactly = 1) { mockContext.sequenceNumberGenerator }
         verify(exactly = 1) { mockArgProvider.duration() }
+        verify(exactly = 0) { mockArgProvider.accessDateTime() }
         verify(exactly = 0) { mockArgProvider.method() }
         verify(exactly = 0) { mockArgProvider.uri() }
         verify(exactly = 0) { mockArgProvider.protocol() }
@@ -68,6 +69,7 @@ class AccessEventTests {
         verify(exactly = 0) { mockConnectionInformation.hostPort() }
 
         repeat(2) {
+            accessEvent.timeStamp
             accessEvent.method
             accessEvent.requestURI
             accessEvent.queryString
@@ -117,6 +119,7 @@ class AccessEventTests {
         mockArgProvider: AccessLogArgProvider,
         mockConnectionInformation: ConnectionInformation,
     ) {
+        verify(exactly = 1) { mockArgProvider.accessDateTime() }
         verify(exactly = 1) { mockArgProvider.method() }
         verify(exactly = 3) { mockArgProvider.uri() }
         verify(exactly = 1) { mockArgProvider.protocol() }
@@ -300,6 +303,7 @@ class AccessEventTests {
         every { mockConnectionInformation.connectionRemoteAddress() } returns null
         val mockArgProvider = mockk<AccessLogArgProvider>()
         every { mockArgProvider.duration() } returns 0
+        every { mockArgProvider.accessDateTime() } returns null
         every { mockArgProvider.method() } returns null
         every { mockArgProvider.uri() } returns null
         every { mockArgProvider.protocol() } returns null
@@ -312,6 +316,7 @@ class AccessEventTests {
 
         val accessEvent = AccessEvent(mockArgProvider, mockContext)
 
+        accessEvent.timeStamp.shouldBeZero()
         accessEvent.method shouldBe NA
         accessEvent.requestURI shouldBe NA
         accessEvent.queryString shouldBe NA
@@ -489,6 +494,7 @@ class AccessEventTests {
         accessEvent.getAttribute(ATTRIBUTE) shouldBe NA
         accessEvent.requestContent.shouldBeEmpty()
         accessEvent.responseContent.shouldBeEmpty()
+        accessEvent.timeStamp shouldBe TIMESTAMP
         accessEvent.serverAdapter.shouldNotBeNull()
         accessEvent.serverAdapter.requestTimestamp shouldBe TIMESTAMP
         accessEvent.serverAdapter.contentLength shouldBe CONTENT_LENGTH
