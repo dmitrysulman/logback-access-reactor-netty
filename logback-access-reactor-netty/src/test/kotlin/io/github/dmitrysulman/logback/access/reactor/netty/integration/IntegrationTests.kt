@@ -2,6 +2,7 @@ package io.github.dmitrysulman.logback.access.reactor.netty.integration
 
 import ch.qos.logback.access.common.joran.JoranConfigurator
 import ch.qos.logback.access.common.spi.IAccessEvent
+import ch.qos.logback.core.spi.FilterReply
 import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory
 import io.github.dmitrysulman.logback.access.reactor.netty.enableLogbackAccess
 import io.kotest.assertions.nondeterministic.continually
@@ -25,6 +26,9 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 import reactor.core.publisher.Mono
 import reactor.netty.DisposableServer
 import reactor.netty.http.client.HttpClient
@@ -48,8 +52,17 @@ class IntegrationTests {
         server.disposeNow()
     }
 
-    @Test
-    fun `test basic request`(): Unit =
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "/",
+            "/test",
+            "/test?name=value",
+            "/test?name1=value1&name2=value2",
+            "/test?name=v%20alue%21%40%23%24%25%5E%26%2A%28%29%3D%2B",
+        ],
+    )
+    fun `test basic requests`(uri: String): Unit =
         runBlocking {
             val accessLogFactory =
                 ReactorNettyAccessLogFactory("logback-access-stdout.xml", JoranConfigurator(), true)
@@ -57,7 +70,7 @@ class IntegrationTests {
             val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
             server = createServer(accessLogFactory, "mock response")
             client = createClient()
-            val response = performGetRequest("/test?name=value").awaitSingleOrNull()
+            val response = performGetRequest(uri).awaitSingleOrNull()
             response.shouldNotBeNull()
             response.status().code() shouldBe 200
 
@@ -70,7 +83,7 @@ class IntegrationTests {
         }
 
     @Test
-    fun `test filter`(): Unit =
+    fun `test filter deny`(): Unit =
         runBlocking {
             val accessLogFactory =
                 ReactorNettyAccessLogFactory("logback-access-filter.xml", JoranConfigurator(), true)
@@ -86,8 +99,20 @@ class IntegrationTests {
             continually(1.seconds) {
                 eventCaptureAppender.list.shouldBeEmpty()
             }
+        }
 
-            val responseAccept = performGetRequest("/test?filter=accept").awaitSingleOrNull()
+    @ParameterizedTest
+    @EnumSource(value = FilterReply::class, names = ["DENY"], mode = EnumSource.Mode.EXCLUDE)
+    fun `test filter allow`(filterReply: FilterReply): Unit =
+        runBlocking {
+            val accessLogFactory =
+                ReactorNettyAccessLogFactory("logback-access-filter.xml", JoranConfigurator(), true)
+
+            val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
+            server = createServer(accessLogFactory, "mock response")
+            client = createClient()
+
+            val responseAccept = performGetRequest("/test?filter=${filterReply.name}").awaitSingleOrNull()
             responseAccept.shouldNotBeNull()
             responseAccept.status().code() shouldBe 200
 
@@ -95,16 +120,6 @@ class IntegrationTests {
                 eventCaptureAppender.list.size shouldBe 1
                 val accessEvent = eventCaptureAppender.list[0]
                 assertAccessEvent(accessEvent, responseAccept)
-            }
-
-            val responseNeutral = performGetRequest("/test?filter=neutral").awaitSingleOrNull()
-            responseNeutral.shouldNotBeNull()
-            responseNeutral.status().code() shouldBe 200
-
-            eventually(1.seconds) {
-                eventCaptureAppender.list.size shouldBe 2
-                val accessEvent = eventCaptureAppender.list[1]
-                assertAccessEvent(accessEvent, responseNeutral)
             }
         }
 
