@@ -379,14 +379,20 @@ class AccessEventTests {
     }
 
     @Test
-    fun `should not throw on null or blank cookie name`() {
+    fun `should not throw on null or blank or illegal cookie`() {
         val mockContext = mockk<AccessContext>(relaxed = true)
         val mockArgProvider = mockk<AccessLogArgProvider>(relaxed = true)
+        val cookieWithNullValue = mockk<DefaultCookie>()
+        every { cookieWithNullValue.value() } returns null
         every { mockArgProvider.cookies() } returns
             mapOf(
                 null to setOf(DefaultCookie(COOKIE, VALUE)),
                 "" to setOf(DefaultCookie(COOKIE, VALUE)),
                 "   " to setOf(DefaultCookie(COOKIE, VALUE)),
+                "()<>@,;:" to setOf(DefaultCookie(COOKIE, VALUE)),
+                "empty" to emptySet(),
+                "null" to setOf(null),
+                "nullValue" to setOf(cookieWithNullValue),
                 "cookie1" to setOf(DefaultCookie("cookie1", "value1")),
             )
 
