@@ -31,6 +31,6 @@ jobs:
         # Runs Snyk Code (SAST) analysis and uploads result into GitHub.
         # Use || true to not fail the pipeline
       - name: Snyk test
-        run: snyk test --all-sub-projects # || true
+        run: snyk test --all-sub-projects --configuration-matching=^runtimeClasspath$ # || true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
