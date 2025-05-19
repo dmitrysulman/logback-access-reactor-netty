@@ -1,4 +1,4 @@
-name: Snyk Security
+name: Snyk Dependencies Check
 
 on:
   push:
