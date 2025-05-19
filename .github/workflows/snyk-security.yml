@@ -1,0 +1,36 @@
+name: Snyk Dependencies Check
+
+on:
+  push:
+    branches: ["main" ]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Snyk CLI to check for security issues
+        # Snyk can be used to break the build when it detects security issues.
+        # In this case we want to upload the SAST issues to GitHub Code Scanning
+        uses: snyk/actions/setup@806182742461562b67788a64410098c9d9b96adb
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+        # Runs Snyk Code (SAST) analysis and uploads result into GitHub.
+        # Use || true to not fail the pipeline
+      - name: Snyk test
+        run: snyk test --all-sub-projects --configuration-matching=^runtimeClasspath$ # || true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
