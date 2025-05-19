@@ -4,7 +4,6 @@ import ch.qos.logback.access.common.joran.JoranConfigurator
 import ch.qos.logback.access.common.spi.IAccessEvent
 import ch.qos.logback.core.spi.FilterReply
 import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory
-import io.github.dmitrysulman.logback.access.reactor.netty.enableLogbackAccess
 import io.kotest.assertions.nondeterministic.continually
 import io.kotest.assertions.nondeterministic.eventually
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -199,7 +198,7 @@ class IntegrationTests {
         responseContent: String,
     ) = HttpServer
         .create()
-        .enableLogbackAccess(accessLogFactory)
+        .accessLog(true, accessLogFactory)
         .handle { request, response ->
             val remoteHost = request.remoteAddress()!!.hostString
             val remoteAddress = request.remoteAddress()!!.address.hostAddress
