@@ -80,9 +80,9 @@ HttpServer.create()
 
 The library can be configured in several ways:
 
-1. **Default configuration** uses `logback-access.xml` file on the classpath.
+1. **Default configuration** uses the `logback-access.xml` file from the classpath or the current directory, with a fallback to the [Common Log Format](https://en.wikipedia.org/wiki/Common_Log_Format).
 2. **System property.** Set `-Dlogback.access.reactor.netty.config` property to specify configuration file location.
-3. **Programmatic configuration.** Provide configuration file filename or URL of the resource directly:
+3. **Programmatic configuration.** Provide configuration file filename or URL of the classpath resource directly:
 ```java
 // Using specific configuration file by the filename
 var factory = new ReactorNettyAccessLogFactory("/path/to/logback-access.xml");

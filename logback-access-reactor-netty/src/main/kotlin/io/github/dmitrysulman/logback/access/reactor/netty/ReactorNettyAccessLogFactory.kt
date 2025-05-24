@@ -6,7 +6,6 @@ import ch.qos.logback.core.status.ErrorStatus
 import ch.qos.logback.core.status.InfoStatus
 import ch.qos.logback.core.status.OnConsoleStatusListener
 import ch.qos.logback.core.status.Status
-import ch.qos.logback.core.status.WarnStatus
 import ch.qos.logback.core.util.StatusListenerConfigHelper
 import ch.qos.logback.core.util.StatusPrinter2
 import reactor.netty.http.server.logging.AccessLogArgProvider
@@ -120,19 +119,15 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
     }
 
     private fun initialize(
-        config: URL?,
+        config: URL,
         joranConfigurator: JoranConfigurator,
         debug: Boolean,
     ) {
         try {
-            if (config != null) {
-                addStatus(InfoStatus("Start configuring with configuration file [${config.file}]", this::class.java.simpleName))
-                accessContext.name = config.file
-                joranConfigurator.context = accessContext
-                joranConfigurator.doConfigure(config)
-            } else {
-                addStatus(WarnStatus("No configuration file provided, skipping configuration", this::class.java.simpleName))
-            }
+            addStatus(InfoStatus("Start configuring with configuration file [${config.file}]", this::class.java.simpleName))
+            accessContext.name = config.file
+            joranConfigurator.context = accessContext
+            joranConfigurator.doConfigure(config)
             if (debug) {
                 StatusListenerConfigHelper.addOnConsoleListenerInstance(accessContext, OnConsoleStatusListener())
             }
@@ -147,7 +142,7 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
         }
     }
 
-    private fun getDefaultConfig(): URL? {
+    private fun getDefaultConfig(): URL {
         val fileNameFromSystemProperty =
             System.getProperty(CONFIG_FILE_NAME_PROPERTY)?.also {
                 addStatus(
@@ -173,9 +168,11 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
             )
             try {
                 getConfigFromFileName(DEFAULT_CONFIG_FILE_NAME)
-            } catch (e: FileNotFoundException) {
-                addStatus(WarnStatus(e.message, this::class.java.simpleName))
-                null
+            } catch (_: FileNotFoundException) {
+                addStatus(
+                    InfoStatus("Not found [$DEFAULT_CONFIG_FILE_NAME], fallback to the default configuration", this::class.java.simpleName),
+                )
+                getResource(DEFAULT_CONFIGURATION)
             }
         }
     }
@@ -187,11 +184,14 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
             file.toURI().toURL()
         } else {
             addStatus(InfoStatus("Not found file [$fileName], checking resource", this::class.java.simpleName))
-            this::class.java.classLoader.getResource(fileName)?.also {
-                addStatus(InfoStatus("Found resource [${it.file}]", this::class.java.simpleName))
-            } ?: throw FileNotFoundException("Configuration file $fileName not found")
+            getResource(fileName)
         }
     }
+
+    private fun getResource(fileName: String) =
+        this::class.java.classLoader.getResource(fileName)?.also {
+            addStatus(InfoStatus("Found resource [${it.file}]", this::class.java.simpleName))
+        } ?: throw FileNotFoundException("Configuration file $fileName not found")
 
     private fun addStatus(status: Status) {
         accessContext.statusManager.add(status)
@@ -215,5 +215,10 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
          * The default configuration file name used for the Logback Access configuration.
          */
         const val DEFAULT_CONFIG_FILE_NAME = "logback-access.xml"
+
+        /**
+         * The fallback configuration file path.
+         */
+        const val DEFAULT_CONFIGURATION = "logback-access-reactor-netty/logback-access-default-config.xml"
     }
 }
