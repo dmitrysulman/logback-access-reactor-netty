@@ -49,19 +49,15 @@ class ReactorNettyAccessLogFactoryAutoConfiguration {
     private fun getConfigUrl(
         properties: LogbackAccessReactorNettyProperties,
         resourceLoader: ResourceLoader,
-    ) = if (properties.config != null) {
-        ResourceUtils.getURL(properties.config)
-    } else {
-        getDefaultConfigurationResource(resourceLoader).url
-    }
+    ) = properties.config?.let { ResourceUtils.getURL(it) }
+        ?: getDefaultConfigurationResource(resourceLoader).url
 
     private fun getDefaultConfigurationResource(resourceLoader: ResourceLoader) =
         resourceLoader
-            .getResource("${ResourceUtils.CLASSPATH_URL_PREFIX}${ReactorNettyAccessLogFactory.DEFAULT_CONFIG_FILE_NAME}")
+            .getResource("${ResourceUtils.FILE_URL_PREFIX}${ReactorNettyAccessLogFactory.DEFAULT_CONFIG_FILE_NAME}")
             .takeIf { it.exists() }
-            ?: resourceLoader.getResource(DEFAULT_CONFIGURATION_URL)
-
-    companion object {
-        const val DEFAULT_CONFIGURATION_URL = "classpath:logback-access-reactor-netty/logback-access-default-config.xml"
-    }
+            ?: resourceLoader
+                .getResource("${ResourceUtils.CLASSPATH_URL_PREFIX}${ReactorNettyAccessLogFactory.DEFAULT_CONFIG_FILE_NAME}")
+                .takeIf { it.exists() }
+            ?: resourceLoader.getResource("${ResourceUtils.CLASSPATH_URL_PREFIX}${ReactorNettyAccessLogFactory.DEFAULT_CONFIGURATION}")
 }
