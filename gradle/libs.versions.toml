@@ -14,6 +14,7 @@ logbackClassic = "1.5.18"
 mockk = "1.14.2"
 reactorNetty = "1.2.7"
 slf4j = "2.0.17"
+springBoot = "3.4.6"
 
 [libraries]
 dokka-plugin = { group = "org.jetbrains.dokka", name = "org.jetbrains.dokka.gradle.plugin", version.ref = "dokka" }
@@ -31,7 +32,13 @@ logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 reactorNetty-http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "reactorNetty" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+spring-boot-autoconfigureProcessor = { group = "org.springframework.boot", name = "spring-boot-autoconfigure-processor", version.ref = "springBoot" }
+spring-boot-configurationProcessor = { group = "org.springframework.boot", name = "spring-boot-configuration-processor", version.ref = "springBoot" }
+spring-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter", version.ref = "springBoot" }
+spring-boot-starter-reactorNetty = { group = "org.springframework.boot", name = "spring-boot-starter-reactor-netty", version.ref = "springBoot" }
+spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "springBoot" }
 
 [plugins]
 dokka = { id = "org.jetbrains.dokka" }
 jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
+kotlin-springPlugin = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
