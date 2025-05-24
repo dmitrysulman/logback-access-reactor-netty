@@ -31,6 +31,26 @@ java {
     withSourcesJar()
 }
 
+val provided: Configuration by configurations.creating {
+    isCanBeConsumed = false
+    isCanBeResolved = false
+}
+
+configurations {
+    compileClasspath {
+        extendsFrom(provided)
+    }
+    runtimeClasspath {
+        extendsFrom(provided)
+    }
+    testCompileClasspath {
+        extendsFrom(provided)
+    }
+    testRuntimeClasspath {
+        extendsFrom(provided)
+    }
+}
+
 tasks.build {
     dependsOn(tasks.check)
     dependsOn(tasks.jacocoTestReport)

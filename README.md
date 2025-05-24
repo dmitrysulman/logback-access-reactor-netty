@@ -28,7 +28,7 @@ A Java/Kotlin library that integrates Logback Access with Reactor Netty HTTP ser
 
 - Java 17+
 - Kotlin Standard Library 2.1.21
-- Reactor Netty HTTP Server 1.2.6
+- Reactor Netty HTTP Server 1.2.6+ (should be explicitly provided)
 - Logback-access 2.0.6
 - SLF4J 2.0.17
 
