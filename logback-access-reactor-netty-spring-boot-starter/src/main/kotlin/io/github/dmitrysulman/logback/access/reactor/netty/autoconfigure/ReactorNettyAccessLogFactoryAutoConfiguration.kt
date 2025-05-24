@@ -11,10 +11,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.context.annotation.Bean
+import org.springframework.core.env.Environment
 import org.springframework.core.io.ResourceLoader
 import org.springframework.util.ResourceUtils
 import reactor.netty.http.server.HttpServer
-import java.net.URL
 
 /**
  * [Auto-configuration][EnableAutoConfiguration] for a Logback Access Reactor Netty integration.
@@ -29,6 +29,7 @@ class ReactorNettyAccessLogFactoryAutoConfiguration {
     fun reactorNettyAccessLogWebServerFactoryCustomize(
         properties: LogbackAccessReactorNettyProperties,
         resourceLoader: ResourceLoader,
+        environment: Environment,
     ): WebServerFactoryCustomizer<NettyReactiveWebServerFactory> =
         WebServerFactoryCustomizer { factory ->
             factory.addServerCustomizers(
@@ -37,7 +38,7 @@ class ReactorNettyAccessLogFactoryAutoConfiguration {
                         true,
                         ReactorNettyAccessLogFactory(
                             getConfigUrl(properties, resourceLoader),
-                            ReactorNettyJoranConfigurator(),
+                            ReactorNettyJoranConfigurator(environment),
                             properties.debug ?: false,
                         ),
                     )
@@ -48,8 +49,19 @@ class ReactorNettyAccessLogFactoryAutoConfiguration {
     private fun getConfigUrl(
         properties: LogbackAccessReactorNettyProperties,
         resourceLoader: ResourceLoader,
-    ): URL {
-//        return resourceLoader.getResource(properties.config ?: "logback-access.xml").url
-        return ResourceUtils.getURL(properties.config ?: "logback-access.xml")
+    ) = if (properties.config != null) {
+        ResourceUtils.getURL(properties.config)
+    } else {
+        getDefaultConfigurationResource(resourceLoader).url
+    }
+
+    private fun getDefaultConfigurationResource(resourceLoader: ResourceLoader) =
+        resourceLoader
+            .getResource("${ResourceUtils.CLASSPATH_URL_PREFIX}${ReactorNettyAccessLogFactory.DEFAULT_CONFIG_FILE_NAME}")
+            .takeIf { it.exists() }
+            ?: resourceLoader.getResource(DEFAULT_CONFIGURATION_URL)
+
+    companion object {
+        const val DEFAULT_CONFIGURATION_URL = "classpath:logback-access-reactor-netty/logback-access-default-config.xml"
     }
 }
