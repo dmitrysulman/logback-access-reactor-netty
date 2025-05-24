@@ -1,16 +1,24 @@
 package io.github.dmitrysulman.logback.access.reactor.netty
 
 import ch.qos.logback.access.common.joran.JoranConfigurator
+import ch.qos.logback.core.joran.spi.JoranException
 import ch.qos.logback.core.status.OnConsoleStatusListener
+import ch.qos.logback.core.status.Status
 import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory.Companion.CONFIG_FILE_NAME_PROPERTY
+import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory.Companion.DEFAULT_CONFIG_FILE_NAME
 import io.github.dmitrysulman.logback.access.reactor.netty.integration.EventCaptureAppender
 import io.kotest.assertions.throwables.shouldThrowExactly
-import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.types.shouldBeTypeOf
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.spyk
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import java.io.FileNotFoundException
+import java.net.URL
 
 class ReactorNettyAccessLogFactoryTests {
     @Test
@@ -97,17 +105,52 @@ class ReactorNettyAccessLogFactoryTests {
     }
 
     @Test
+    fun `test not existing file url from constructor parameter`() {
+        shouldThrowExactly<JoranException> { ReactorNettyAccessLogFactory(URL("file:logback-access-not-exist.xml")) }
+    }
+
+    @Test
     fun `test not existing filename from configuration property`() {
         System.setProperty(CONFIG_FILE_NAME_PROPERTY, "logback-access-not-exist.xml")
-        val reactorNettyAccessLogFactory = ReactorNettyAccessLogFactory()
-        reactorNettyAccessLogFactory.accessContext
-            .iteratorForAppenders()
-            .hasNext()
-            .shouldBeFalse()
+        shouldThrowExactly<FileNotFoundException> { ReactorNettyAccessLogFactory() }
     }
 
     @Test
     fun `test not existing filename from constructor parameter`() {
         shouldThrowExactly<FileNotFoundException> { ReactorNettyAccessLogFactory("logback-access-not-exist.xml") }
+    }
+
+    @Test
+    fun `test not existing default config file`() {
+        val reactorNettyAccessLogFactory = spyk<ReactorNettyAccessLogFactory>(recordPrivateCalls = true)
+        every { reactorNettyAccessLogFactory["getConfigFromFileName"](DEFAULT_CONFIG_FILE_NAME) } throws FileNotFoundException()
+        val getDefaultConfigMethod = reactorNettyAccessLogFactory::class.java.getDeclaredMethod("getDefaultConfig")
+        getDefaultConfigMethod.trySetAccessible()
+        val defaultConfigUrl = getDefaultConfigMethod.invoke(reactorNettyAccessLogFactory) as URL?
+        defaultConfigUrl.shouldBeNull()
+    }
+
+    @Test
+    fun `test initialization without config`() {
+        val reactorNettyAccessLogFactory = ReactorNettyAccessLogFactory()
+        val joranConfigurator = mockk<JoranConfigurator>(relaxed = true)
+        val initializeMethod =
+            reactorNettyAccessLogFactory::class.java.getDeclaredMethod(
+                "initialize",
+                URL::class.java,
+                JoranConfigurator::class.java,
+                Boolean::class.java,
+            )
+        initializeMethod.trySetAccessible()
+        initializeMethod.invoke(reactorNettyAccessLogFactory, null, joranConfigurator, false)
+
+        verify(exactly = 0) { joranConfigurator.context }
+        verify(exactly = 0) { joranConfigurator.doConfigure(any<URL>()) }
+
+        reactorNettyAccessLogFactory.accessContext.statusManager.copyOfStatusList
+            .any {
+                it.effectiveLevel == Status.WARN &&
+                    it.message == "No configuration file provided, skipping configuration"
+            }.shouldBeTrue()
     }
 }

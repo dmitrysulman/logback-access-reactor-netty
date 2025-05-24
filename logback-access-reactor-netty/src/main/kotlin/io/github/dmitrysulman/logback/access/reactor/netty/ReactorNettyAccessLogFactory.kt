@@ -140,6 +140,7 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
             addStatus(InfoStatus("Done configuring", this::class.java.simpleName))
         } catch (e: Exception) {
             addStatus(ErrorStatus("Failed to configure ReactorNettyAccessLogFactory", this::class.java.simpleName, e))
+            throw e
         }
         if (!debug) {
             StatusPrinter2().printInCaseOfErrorsOrWarnings(accessContext)
@@ -147,30 +148,35 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
     }
 
     private fun getDefaultConfig(): URL? {
-        return try {
-            val fileNameFromSystemProperty =
-                System.getProperty(CONFIG_FILE_NAME_PROPERTY)?.also {
-                    addStatus(
-                        InfoStatus(
-                            "Found system property [$CONFIG_FILE_NAME_PROPERTY] value: [$it]",
-                            this::class.java.simpleName,
-                        ),
-                    )
-                }
-            val fileName =
-                fileNameFromSystemProperty ?: run {
-                    addStatus(
-                        InfoStatus(
-                            "No system property [$CONFIG_FILE_NAME_PROPERTY] provided, checking [$DEFAULT_CONFIG_FILE_NAME]",
-                            this::class.java.simpleName,
-                        ),
-                    )
-                    DEFAULT_CONFIG_FILE_NAME
-                }
-            getConfigFromFileName(fileName)
-        } catch (e: FileNotFoundException) {
-            addStatus(WarnStatus(e.message, this::class.java.simpleName))
-            return null
+        val fileNameFromSystemProperty =
+            System.getProperty(CONFIG_FILE_NAME_PROPERTY)?.also {
+                addStatus(
+                    InfoStatus(
+                        "Found system property [$CONFIG_FILE_NAME_PROPERTY] value: [$it]",
+                        this::class.java.simpleName,
+                    ),
+                )
+            }
+        return if (fileNameFromSystemProperty != null) {
+            try {
+                getConfigFromFileName(fileNameFromSystemProperty)
+            } catch (e: FileNotFoundException) {
+                addStatus(ErrorStatus(e.message, this::class.java.simpleName))
+                throw e
+            }
+        } else {
+            addStatus(
+                InfoStatus(
+                    "No system property [$CONFIG_FILE_NAME_PROPERTY] provided, checking [$DEFAULT_CONFIG_FILE_NAME]",
+                    this::class.java.simpleName,
+                ),
+            )
+            try {
+                getConfigFromFileName(DEFAULT_CONFIG_FILE_NAME)
+            } catch (e: FileNotFoundException) {
+                addStatus(WarnStatus(e.message, this::class.java.simpleName))
+                null
+            }
         }
     }
 
