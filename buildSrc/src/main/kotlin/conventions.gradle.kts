@@ -95,6 +95,10 @@ dokka {
                 url("https://javadoc.io/doc/ch.qos.logback/logback-core/${libs.versions.logbackClassic.get()}/")
                 packageListUrl("https://javadoc.io/doc/ch.qos.logback/logback-core/${libs.versions.logbackClassic.get()}/element-list")
             }
+            register("spring-boot-docs") {
+                url("https://docs.spring.io/spring-boot/${libs.versions.springBoot.get()}/api/java/")
+                packageListUrl("https://docs.spring.io/spring-boot/${libs.versions.springBoot.get()}/api/java/element-list")
+            }
         }
     }
 }
