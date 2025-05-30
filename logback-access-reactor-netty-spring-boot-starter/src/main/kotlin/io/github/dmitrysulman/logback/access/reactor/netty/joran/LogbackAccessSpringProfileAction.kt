@@ -5,13 +5,21 @@ import ch.qos.logback.core.joran.spi.SaxEventInterpretationContext
 import ch.qos.logback.core.model.Model
 import org.xml.sax.Attributes
 
-class SpringProfileAction : BaseModelAction() {
+/**
+ * Logback Access [BaseModelAction] for `<springProfile>` tags. Allows a section of a
+ * Logback Access configuration to only be enabled when a specific profile is active.
+ *
+ * @see [org.springframework.boot.logging.logback.SpringProfileAction]
+ * @see [LogbackAccessSpringProfileModel]
+ * @see [LogbackAccessSpringProfileModelHandler]
+ */
+class LogbackAccessSpringProfileAction : BaseModelAction() {
     override fun buildCurrentModel(
         interpretationContext: SaxEventInterpretationContext,
         name: String,
         attributes: Attributes,
     ): Model =
-        SpringProfileModel().apply {
+        LogbackAccessSpringProfileModel().apply {
             this.name = attributes.getValue(NAME_ATTRIBUTE)
         }
 }

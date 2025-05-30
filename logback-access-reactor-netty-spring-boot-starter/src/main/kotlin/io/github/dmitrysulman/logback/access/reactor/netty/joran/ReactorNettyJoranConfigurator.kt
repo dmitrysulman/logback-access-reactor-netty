@@ -13,7 +13,7 @@ class ReactorNettyJoranConfigurator(
 ) : JoranConfigurator() {
     override fun addElementSelectorAndActionAssociations(rs: RuleStore) {
         super.addElementSelectorAndActionAssociations(rs)
-        rs.addRule(ElementSelector("*/springProfile"), ::SpringProfileAction)
+        rs.addRule(ElementSelector("*/springProfile"), ::LogbackAccessSpringProfileAction)
         rs.addTransparentPathPart("springProfile")
     }
 
@@ -22,8 +22,8 @@ class ReactorNettyJoranConfigurator(
     }
 
     override fun addModelHandlerAssociations(defaultProcessor: DefaultProcessor) {
-        defaultProcessor.addHandler(SpringProfileModel::class.java) { _, _ ->
-            SpringProfileModelHandler(context, environment)
+        defaultProcessor.addHandler(LogbackAccessSpringProfileModel::class.java) { _, _ ->
+            LogbackAccessSpringProfileModelHandler(context, environment)
         }
         super.addModelHandlerAssociations(defaultProcessor)
     }
