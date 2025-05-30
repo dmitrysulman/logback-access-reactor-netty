@@ -84,8 +84,8 @@ dokka {
         }
         externalDocumentationLinks {
             register("reactor-netty-docs") {
-                url("https://javadoc.io/doc/io.projectreactor.netty/reactor-netty-http/${libs.versions.reactorNetty.get()}/")
-                packageListUrl("https://javadoc.io/doc/io.projectreactor.netty/reactor-netty-http/${libs.versions.reactorNetty.get()}/package-list")
+                url("https://projectreactor.io/docs/netty/${libs.versions.reactorNetty.get()}/api/")
+                packageListUrl("https://projectreactor.io/docs/netty/${libs.versions.reactorNetty.get()}/api/package-list")
             }
             register("logback-access-docs") {
                 url("https://javadoc.io/doc/ch.qos.logback.access/logback-access-common/${libs.versions.logbackAccess.get()}/")
