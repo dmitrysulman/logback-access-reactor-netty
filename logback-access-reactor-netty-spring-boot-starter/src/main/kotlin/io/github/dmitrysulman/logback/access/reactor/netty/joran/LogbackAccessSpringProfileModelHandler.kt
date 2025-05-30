@@ -7,7 +7,7 @@ import ch.qos.logback.core.model.processor.ModelInterpretationContext
 import ch.qos.logback.core.util.OptionHelper
 import org.springframework.core.env.Environment
 
-class SpringProfileModelHandler(
+class LogbackAccessSpringProfileModelHandler(
     context: Context,
     private val environment: Environment,
 ) : ModelHandlerBase(context) {
@@ -15,7 +15,7 @@ class SpringProfileModelHandler(
         mic: ModelInterpretationContext,
         model: Model,
     ) {
-        if (model is SpringProfileModel) {
+        if (model is LogbackAccessSpringProfileModel) {
             val profiles =
                 model.name
                     .split(",")
