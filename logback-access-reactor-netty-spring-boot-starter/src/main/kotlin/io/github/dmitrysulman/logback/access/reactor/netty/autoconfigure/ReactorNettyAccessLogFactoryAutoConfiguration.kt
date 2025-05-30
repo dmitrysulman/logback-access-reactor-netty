@@ -5,6 +5,7 @@ import io.github.dmitrysulman.logback.access.reactor.netty.joran.ReactorNettyJor
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -26,21 +27,27 @@ import reactor.netty.http.server.HttpServer
 @EnableConfigurationProperties(LogbackAccessReactorNettyProperties::class)
 class ReactorNettyAccessLogFactoryAutoConfiguration {
     @Bean
-    fun reactorNettyAccessLogWebServerFactoryCustomize(
+    @ConditionalOnMissingBean
+    fun reactorNettyAccessLogFactory(
         properties: LogbackAccessReactorNettyProperties,
         resourceLoader: ResourceLoader,
         environment: Environment,
+    ) = ReactorNettyAccessLogFactory(
+        getConfigUrl(properties, resourceLoader),
+        ReactorNettyJoranConfigurator(environment),
+        properties.debug ?: false,
+    )
+
+    @Bean
+    fun reactorNettyAccessLogWebServerFactoryCustomize(
+        reactorNettyAccessLogFactory: ReactorNettyAccessLogFactory,
     ): WebServerFactoryCustomizer<NettyReactiveWebServerFactory> =
         WebServerFactoryCustomizer { factory ->
             factory.addServerCustomizers(
                 { server ->
                     server.accessLog(
                         true,
-                        ReactorNettyAccessLogFactory(
-                            getConfigUrl(properties, resourceLoader),
-                            ReactorNettyJoranConfigurator(environment),
-                            properties.debug ?: false,
-                        ),
+                        reactorNettyAccessLogFactory,
                     )
                 },
             )
