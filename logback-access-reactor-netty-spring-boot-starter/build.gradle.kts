@@ -1,5 +1,5 @@
 plugins {
-    id("conventions")
+    alias(libs.plugins.conventions)
     alias(libs.plugins.kotlin.springPlugin)
     kotlin("kapt")
 }

@@ -40,5 +40,6 @@ spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-
 
 [plugins]
 dokka = { id = "org.jetbrains.dokka" }
+conventions = { id = "conventions" }
 jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
 kotlin-springPlugin = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
