@@ -8,6 +8,12 @@ import ch.qos.logback.core.model.processor.DefaultProcessor
 import org.springframework.core.env.Environment
 import java.util.function.Supplier
 
+/**
+ * Extended version of the Logback Access [JoranConfigurator] that adds support of `<springProfile>` tags.
+ *
+ * See [SpringBootJoranConfigurator](https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/logging/logback/SpringBootJoranConfigurator.java).
+ *
+ */
 class ReactorNettyJoranConfigurator(
     private val environment: Environment,
 ) : JoranConfigurator() {
