@@ -9,7 +9,8 @@ import org.xml.sax.Attributes
  * Logback Access [BaseModelAction] for `<springProfile>` tags. Allows a section of a
  * Logback Access configuration to only be enabled when a specific profile is active.
  *
- * @see [org.springframework.boot.logging.logback.SpringProfileAction]
+ * See [SpringProfileAction](https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/logging/logback/SpringProfileAction.java).
+ *
  * @see [LogbackAccessSpringProfileModel]
  * @see [LogbackAccessSpringProfileModelHandler]
  */
