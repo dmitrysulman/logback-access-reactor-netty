@@ -7,7 +7,7 @@ import java.net.URL
  * Extension for [HttpServer] providing [HttpServer.accessLog] method alternative.
  *
  * @param reactorNettyAccessLogFactory The [ReactorNettyAccessLogFactory] instance for access log configuration.
- * @return a new [HttpServer]
+ * @return a new [HttpServer].
  */
 fun HttpServer.enableLogbackAccess(reactorNettyAccessLogFactory: ReactorNettyAccessLogFactory): HttpServer =
     accessLog(true, reactorNettyAccessLogFactory)
@@ -16,7 +16,7 @@ fun HttpServer.enableLogbackAccess(reactorNettyAccessLogFactory: ReactorNettyAcc
  * Extension for [HttpServer] providing [HttpServer.accessLog] method alternative with a default
  * [ReactorNettyAccessLogFactory] configuration.
  *
- * @return a new [HttpServer]
+ * @return a new [HttpServer].
  */
 fun HttpServer.enableLogbackAccess(): HttpServer = enableLogbackAccess(ReactorNettyAccessLogFactory())
 

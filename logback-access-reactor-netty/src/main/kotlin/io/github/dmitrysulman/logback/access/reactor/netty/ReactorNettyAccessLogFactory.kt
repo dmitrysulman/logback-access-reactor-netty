@@ -200,8 +200,8 @@ class ReactorNettyAccessLogFactory : AccessLogFactory {
     /**
      * Applies the provided [AccessLogArgProvider] to create a new [AccessLog] instance.
      *
-     * @param argProvider the provider of arguments to building an [AccessLog] instance
-     * @return a new [AccessLog] instance
+     * @param argProvider the provider of arguments to building an [AccessLog] instance.
+     * @return a new [AccessLog] instance.
      */
     override fun apply(argProvider: AccessLogArgProvider) = AccessLog(accessContext, argProvider)
 
