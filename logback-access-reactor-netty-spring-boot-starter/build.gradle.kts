@@ -17,5 +17,9 @@ dependencies {
     kapt(libs.spring.boot.autoconfigureProcessor)
     kapt(libs.spring.boot.configurationProcessor)
 
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.kotest.assertions.core.jvm)
+    testImplementation(libs.mockk)
     testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.spring.boot.starter.webflux)
 }

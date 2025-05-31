@@ -3,17 +3,19 @@ package io.github.dmitrysulman.logback.access.reactor.netty.autoconfigure
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties("logback.access.reactor.netty")
-class LogbackAccessReactorNettyProperties(
+class LogbackAccessReactorNettyProperties {
     /**
      * Enable Logback Access Reactor Netty auto-configuration
      */
-    val enabled: Boolean?,
+    var enabled: Boolean? = null
+
     /**
      * Config file name
      */
-    val config: String?,
+    var config: String? = null
+
     /**
      * Enable debug mode
      */
-    val debug: Boolean?,
-)
+    var debug: Boolean? = null
+}

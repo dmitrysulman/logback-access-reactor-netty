@@ -9,8 +9,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
-import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.core.env.Environment
 import org.springframework.core.io.ResourceLoader
@@ -39,19 +37,9 @@ class ReactorNettyAccessLogFactoryAutoConfiguration {
     )
 
     @Bean
-    fun reactorNettyAccessLogWebServerFactoryCustomize(
-        reactorNettyAccessLogFactory: ReactorNettyAccessLogFactory,
-    ): WebServerFactoryCustomizer<NettyReactiveWebServerFactory> =
-        WebServerFactoryCustomizer { factory ->
-            factory.addServerCustomizers(
-                { server ->
-                    server.accessLog(
-                        true,
-                        reactorNettyAccessLogFactory,
-                    )
-                },
-            )
-        }
+    @ConditionalOnMissingBean
+    fun reactorNettyAccessLogWebServerFactoryCustomizer(reactorNettyAccessLogFactory: ReactorNettyAccessLogFactory) =
+        ReactorNettyAccessLogWebServerFactoryCustomizer(true, reactorNettyAccessLogFactory)
 
     private fun getConfigUrl(
         properties: LogbackAccessReactorNettyProperties,
