@@ -23,14 +23,13 @@ class LogbackAccessSpringProfileModelHandler(
         mic: ModelInterpretationContext,
         model: Model,
     ) {
-        if (model is LogbackAccessSpringProfileModel) {
-            val profiles =
-                model.name
-                    .split(",")
-                    .map { OptionHelper.substVars(it.trim(), mic, context) }
-            if (profiles.isEmpty() || !environment.matchesProfiles(*profiles.toTypedArray())) {
-                model.deepMarkAsSkipped()
-            }
+        val profiles =
+            (model as LogbackAccessSpringProfileModel)
+                .name
+                .split(",")
+                .map { OptionHelper.substVars(it.trim(), mic, context) }
+        if (profiles.isEmpty() || !environment.matchesProfiles(*profiles.toTypedArray())) {
+            model.deepMarkAsSkipped()
         }
     }
 }
