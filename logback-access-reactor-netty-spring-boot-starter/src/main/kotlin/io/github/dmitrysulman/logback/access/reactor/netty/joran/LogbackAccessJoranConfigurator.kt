@@ -12,9 +12,8 @@ import java.util.function.Supplier
  * Extended version of the Logback Access [JoranConfigurator] that adds support of `<springProfile>` tags.
  *
  * See [SpringBootJoranConfigurator](https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/logging/logback/SpringBootJoranConfigurator.java).
- *
  */
-class ReactorNettyJoranConfigurator(
+class LogbackAccessJoranConfigurator(
     private val environment: Environment,
 ) : JoranConfigurator() {
     override fun addElementSelectorAndActionAssociations(rs: RuleStore) {
@@ -25,6 +24,7 @@ class ReactorNettyJoranConfigurator(
 
     override fun sanityCheck(topModel: Model) {
         super.sanityCheck(topModel)
+        performCheck(LogbackAccessSpringProfileWithinSecondPhaseElementSanityChecker(), topModel)
     }
 
     override fun addModelHandlerAssociations(defaultProcessor: DefaultProcessor) {
@@ -38,7 +38,7 @@ class ReactorNettyJoranConfigurator(
         super.buildModelInterpretationContext()
         modelInterpretationContext.configuratorSupplier =
             Supplier {
-                ReactorNettyJoranConfigurator(environment).also { it.context = this.context }
+                LogbackAccessJoranConfigurator(environment).also { it.context = this.context }
             }
     }
 }

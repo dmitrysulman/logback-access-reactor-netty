@@ -16,10 +16,10 @@ import org.springframework.context.annotation.Configuration
         "logback.access.reactor.netty.debug=true",
     ],
 )
-@EnableConfigurationProperties(LogbackAccessReactorNettyProperties::class)
+@EnableConfigurationProperties(ReactorNettyAccessLogProperties::class)
 @Configuration
 class LogbackAccessReactorNettyPropertiesTests(
-    @Autowired private val properties: LogbackAccessReactorNettyProperties,
+    @Autowired private val properties: ReactorNettyAccessLogProperties,
 ) {
     @Test
     fun `smoke test`() {

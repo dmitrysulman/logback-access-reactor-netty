@@ -1,7 +1,7 @@
 package io.github.dmitrysulman.logback.access.reactor.netty.autoconfigure
 
 import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory
-import io.github.dmitrysulman.logback.access.reactor.netty.joran.ReactorNettyJoranConfigurator
+import io.github.dmitrysulman.logback.access.reactor.netty.joran.LogbackAccessJoranConfigurator
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
@@ -16,23 +16,23 @@ import org.springframework.util.ResourceUtils
 import reactor.netty.http.server.HttpServer
 
 /**
- * [Auto-configuration][EnableAutoConfiguration] for a Logback Access Reactor Netty integration.
+ * [Auto-configuration][EnableAutoConfiguration] for the Logback Access integration with Reactor Netty.
  */
 @AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ConditionalOnClass(HttpServer::class)
 @ConditionalOnProperty(prefix = "logback.access.reactor.netty", name = ["enabled"], havingValue = "true", matchIfMissing = true)
-@EnableConfigurationProperties(LogbackAccessReactorNettyProperties::class)
+@EnableConfigurationProperties(ReactorNettyAccessLogProperties::class)
 class ReactorNettyAccessLogFactoryAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     fun reactorNettyAccessLogFactory(
-        properties: LogbackAccessReactorNettyProperties,
+        properties: ReactorNettyAccessLogProperties,
         resourceLoader: ResourceLoader,
         environment: Environment,
     ) = ReactorNettyAccessLogFactory(
         getConfigUrl(properties, resourceLoader),
-        ReactorNettyJoranConfigurator(environment),
+        LogbackAccessJoranConfigurator(environment),
         properties.debug ?: false,
     )
 
@@ -42,7 +42,7 @@ class ReactorNettyAccessLogFactoryAutoConfiguration {
         ReactorNettyAccessLogWebServerFactoryCustomizer(true, reactorNettyAccessLogFactory)
 
     private fun getConfigUrl(
-        properties: LogbackAccessReactorNettyProperties,
+        properties: ReactorNettyAccessLogProperties,
         resourceLoader: ResourceLoader,
     ) = properties.config?.let { ResourceUtils.getURL(it) }
         ?: getDefaultConfigurationResource(resourceLoader).url

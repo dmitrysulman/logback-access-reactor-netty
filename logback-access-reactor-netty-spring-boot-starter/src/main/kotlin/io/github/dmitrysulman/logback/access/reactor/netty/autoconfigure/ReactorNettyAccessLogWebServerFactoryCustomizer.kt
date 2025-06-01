@@ -4,6 +4,9 @@ import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLog
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 
+/**
+ * [WebServerFactoryCustomizer] of the [NettyReactiveWebServerFactory] for the Logback Access integration.
+ */
 class ReactorNettyAccessLogWebServerFactoryCustomizer(
     private val enableAccessLog: Boolean,
     private val reactorNettyAccessLogFactory: ReactorNettyAccessLogFactory,
