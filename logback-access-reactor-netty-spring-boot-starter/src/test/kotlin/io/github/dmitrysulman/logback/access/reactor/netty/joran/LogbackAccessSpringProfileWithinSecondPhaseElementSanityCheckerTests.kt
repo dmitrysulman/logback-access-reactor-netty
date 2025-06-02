@@ -4,11 +4,18 @@ import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLog
 import io.github.dmitrysulman.logback.access.reactor.netty.autoconfigure.ReactorNettyAccessLogFactoryAutoConfiguration
 import io.kotest.matchers.booleans.shouldBeTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner
 
 class LogbackAccessSpringProfileWithinSecondPhaseElementSanityCheckerTests {
+    @Test
+    fun `should not fail when model is null`() {
+        val sanityChecker = LogbackAccessSpringProfileWithinSecondPhaseElementSanityChecker()
+        assertDoesNotThrow { sanityChecker.check(null) }
+    }
+
     @Test
     fun `should add warning status on nested springProfile element within appender element`() {
         ReactiveWebApplicationContextRunner()
