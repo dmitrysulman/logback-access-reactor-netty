@@ -19,10 +19,16 @@ import reactor.netty.http.server.logging.AccessLogArgProvider
 class LogbackAccessJoranConfiguratorTests {
     @ParameterizedTest
     @CsvSource(
-        "dev,       logback-access-springprofile-dev.xml",
-        "'dev,prod',logback-access-springprofile-dev.xml",
-        "dev,       logback-access-springprofile-included.xml",
-        "'dev,prod',logback-access-springprofile-included.xml",
+        "dev,           logback-access-springprofile-dev.xml",
+        "'dev,prod',    logback-access-springprofile-dev.xml",
+        "dev,           logback-access-springprofile-included.xml",
+        "'dev,prod',    logback-access-springprofile-included.xml",
+        "dev,           logback-access-springprofile-dev-prod.xml",
+        "prod,          logback-access-springprofile-dev-prod.xml",
+        "'dev,prod',    logback-access-springprofile-dev-prod.xml",
+        "'dev,prod,stg',logback-access-springprofile-dev-prod.xml",
+        "'dev,stg',     logback-access-springprofile-dev-prod.xml",
+        "'prod,stg',    logback-access-springprofile-dev-prod.xml",
     )
     fun `should log event with springProfile configuration`(
         profile: String,
@@ -49,12 +55,13 @@ class LogbackAccessJoranConfiguratorTests {
         strings = [
             "logback-access-springprofile-dev.xml",
             "logback-access-springprofile-included.xml",
+            "logback-access-springprofile-dev-prod.xml",
         ],
     )
     fun `should not log event with prod springProfile configuration`(filename: String) {
         ReactiveWebApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
-            .withPropertyValues("spring.profiles.active=prod")
+            .withPropertyValues("spring.profiles.active=stg")
             .withPropertyValues("logback.access.reactor.netty.config=classpath:$filename")
             .run { context ->
                 val factory = context.getBean<ReactorNettyAccessLogFactory>()
