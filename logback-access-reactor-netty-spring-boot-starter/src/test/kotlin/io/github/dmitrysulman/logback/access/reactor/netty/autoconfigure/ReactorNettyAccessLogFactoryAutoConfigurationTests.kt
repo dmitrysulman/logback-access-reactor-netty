@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.autoconfigure.web.reactive.ReactiveWebServerFactoryAutoConfiguration
 import org.springframework.boot.test.context.FilteredClassLoader
 import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner
+import org.springframework.boot.test.context.runner.WebApplicationContextRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import reactor.netty.http.server.HttpServer
@@ -31,6 +32,27 @@ class ReactorNettyAccessLogFactoryAutoConfigurationTests {
         ReactiveWebApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
             .withClassLoader(FilteredClassLoader(HttpServer::class.java))
+            .run { context ->
+                assertThat(context).doesNotHaveBean(ReactorNettyAccessLogFactory::class.java)
+                assertThat(context).doesNotHaveBean(ReactorNettyAccessLogWebServerFactoryCustomizer::class.java)
+            }
+    }
+
+    @Test
+    fun `should not supply beans when is not reactive web application`() {
+        WebApplicationContextRunner()
+            .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
+            .run { context ->
+                assertThat(context).doesNotHaveBean(ReactorNettyAccessLogFactory::class.java)
+                assertThat(context).doesNotHaveBean(ReactorNettyAccessLogWebServerFactoryCustomizer::class.java)
+            }
+    }
+
+    @Test
+    fun `should not supply beans when disabled by the property`() {
+        ReactiveWebApplicationContextRunner()
+            .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
+            .withPropertyValues("logback.access.reactor.netty.enabled=false")
             .run { context ->
                 assertThat(context).doesNotHaveBean(ReactorNettyAccessLogFactory::class.java)
                 assertThat(context).doesNotHaveBean(ReactorNettyAccessLogWebServerFactoryCustomizer::class.java)
