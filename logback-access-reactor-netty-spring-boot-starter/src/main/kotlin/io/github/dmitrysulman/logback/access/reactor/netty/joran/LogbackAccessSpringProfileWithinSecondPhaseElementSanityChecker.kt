@@ -24,7 +24,7 @@ class LogbackAccessSpringProfileWithinSecondPhaseElementSanityChecker :
         }
 
         deepFindNestedSubModelsOfType(LogbackAccessSpringProfileModel::class.java, secondsPhaseModels)
-            ?.takeIf { it.isNotEmpty() }
+            .takeIf { it.isNotEmpty() }
             ?.also {
                 addWarn("<springProfile> elements cannot be nested within an <appender> element")
             }?.forEach {

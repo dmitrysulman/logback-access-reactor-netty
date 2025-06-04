@@ -26,8 +26,9 @@ class LogbackAccessSpringProfileModelHandler(
         val profiles =
             (model as LogbackAccessSpringProfileModel)
                 .name
-                .split(",")
-                .map { OptionHelper.substVars(it.trim(), mic, context) }
+                ?.split(",")
+                ?.map { OptionHelper.substVars(it.trim(), mic, context) }
+                ?: emptyList()
         if (profiles.isEmpty() || !environment.matchesProfiles(*profiles.toTypedArray())) {
             model.deepMarkAsSkipped()
         }

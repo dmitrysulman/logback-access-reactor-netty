@@ -1,4 +1,4 @@
-package io.github.dmitrysulman.logback.access.reactor.netty.autoconfigure.integration
+package io.github.dmitrysulman.logback.access.reactor.netty
 
 import ch.qos.logback.access.common.spi.IAccessEvent
 import ch.qos.logback.core.AppenderBase

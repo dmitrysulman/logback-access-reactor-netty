@@ -1,5 +1,6 @@
 package io.github.dmitrysulman.logback.access.reactor.netty.autoconfigure.integration
 
+import io.github.dmitrysulman.logback.access.reactor.netty.EventCaptureAppender
 import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
