@@ -1,0 +1,11 @@
+<configuration>
+    <appender name="CAPTURE" class="io.github.dmitrysulman.logback.access.reactor.netty.EventCaptureAppender" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>common</pattern>
+        </encoder>
+    </appender>
+
+    <appender-ref ref="CAPTURE" />
+    <appender-ref ref="STDOUT" />
+</configuration>
