@@ -1,6 +1,8 @@
 package io.github.dmitrysulman.logback.access.reactor.netty.autoconfigure
 
+import ch.qos.logback.core.status.OnConsoleStatusListener
 import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
@@ -56,6 +58,55 @@ class ReactorNettyAccessLogFactoryAutoConfigurationTests {
             .run { context ->
                 assertThat(context).doesNotHaveBean(ReactorNettyAccessLogFactory::class.java)
                 assertThat(context).doesNotHaveBean(ReactorNettyAccessLogWebServerFactoryCustomizer::class.java)
+            }
+    }
+
+    @Test
+    fun `should supply beans when explicitly enabled by the property`() {
+        ReactiveWebApplicationContextRunner()
+            .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
+            .withPropertyValues("logback.access.reactor.netty.enabled=true")
+            .run { context ->
+                assertThat(context).hasSingleBean(ReactorNettyAccessLogFactory::class.java)
+                assertThat(context).hasSingleBean(ReactorNettyAccessLogWebServerFactoryCustomizer::class.java)
+            }
+    }
+
+    @Test
+    fun `should enable debug mode by the property`() {
+        ReactiveWebApplicationContextRunner()
+            .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
+            .withPropertyValues("logback.access.reactor.netty.debug=true")
+            .run { context ->
+                val factory = context.getBean<ReactorNettyAccessLogFactory>()
+                factory.accessContext.statusManager.copyOfStatusListenerList
+                    .any { it::class == OnConsoleStatusListener::class }
+                    .shouldBeTrue()
+            }
+    }
+
+    @Test
+    fun `should not enable debug mode when debug false`() {
+        ReactiveWebApplicationContextRunner()
+            .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
+            .withPropertyValues("logback.access.reactor.netty.debug=false")
+            .run { context ->
+                val factory = context.getBean<ReactorNettyAccessLogFactory>()
+                factory.accessContext.statusManager.copyOfStatusListenerList
+                    .none { it::class == OnConsoleStatusListener::class }
+                    .shouldBeTrue()
+            }
+    }
+
+    @Test
+    fun `should not enable debug mode when no debug property provided`() {
+        ReactiveWebApplicationContextRunner()
+            .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
+            .run { context ->
+                val factory = context.getBean<ReactorNettyAccessLogFactory>()
+                factory.accessContext.statusManager.copyOfStatusListenerList
+                    .none { it::class == OnConsoleStatusListener::class }
+                    .shouldBeTrue()
             }
     }
 

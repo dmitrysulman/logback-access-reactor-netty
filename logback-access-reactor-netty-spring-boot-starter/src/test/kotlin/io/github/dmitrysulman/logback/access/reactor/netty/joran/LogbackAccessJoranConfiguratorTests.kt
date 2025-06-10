@@ -58,7 +58,7 @@ class LogbackAccessJoranConfiguratorTests {
             "logback-access-springprofile-dev-prod.xml",
         ],
     )
-    fun `should not log event with prod springProfile configuration`(filename: String) {
+    fun `should not log event with springProfile configuration`(filename: String) {
         ReactiveWebApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
             .withPropertyValues("spring.profiles.active=stg")
