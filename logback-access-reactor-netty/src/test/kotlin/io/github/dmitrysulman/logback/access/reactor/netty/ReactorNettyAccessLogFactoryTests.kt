@@ -4,8 +4,6 @@ import ch.qos.logback.access.common.joran.JoranConfigurator
 import ch.qos.logback.core.joran.spi.JoranException
 import ch.qos.logback.core.status.OnConsoleStatusListener
 import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory.Companion.CONFIG_FILE_NAME_PROPERTY
-import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory.Companion.DEFAULT_CONFIGURATION
-import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory.Companion.DEFAULT_CONFIG_FILE_NAME
 import io.github.dmitrysulman.logback.access.reactor.netty.integration.EventCaptureAppender
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -124,11 +122,11 @@ class ReactorNettyAccessLogFactoryTests {
     @Test
     fun `test not existing default config file fallback to default configuration`() {
         val reactorNettyAccessLogFactory = spyk<ReactorNettyAccessLogFactory>(recordPrivateCalls = true)
-        every { reactorNettyAccessLogFactory["getConfigFromFileName"](DEFAULT_CONFIG_FILE_NAME) } throws FileNotFoundException()
+        every { reactorNettyAccessLogFactory["getConfigFromFileName"]("logback-access.xml") } throws FileNotFoundException()
         val getDefaultConfigMethod = reactorNettyAccessLogFactory::class.java.getDeclaredMethod("getDefaultConfig")
         getDefaultConfigMethod.trySetAccessible()
         val defaultConfigUrl = getDefaultConfigMethod.invoke(reactorNettyAccessLogFactory) as URL
-        defaultConfigUrl.toString() shouldEndWith DEFAULT_CONFIGURATION
+        defaultConfigUrl.toString() shouldEndWith "logback-access-reactor-netty/logback-access-default-config.xml"
         defaultConfigUrl.openStream().reader().use {
             it.readText() shouldBe
                 """
