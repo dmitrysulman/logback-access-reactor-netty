@@ -9,7 +9,7 @@ A Java/Kotlin library that integrates Logback Access with Reactor Netty HTTP ser
 
 ## Overview
 
-**Reactor Netty HTTP Server** is a non-blocking, asynchronous server built on the Netty networking framework and used as the default runtime for handling HTTP requests in Spring WebFlux. It enables reactive, event-driven processing of web requests, making it well-suited for scalable and high-throughput applications. In Spring Boot, it's automatically configured when building reactive applications with the `spring-boot-starter-webflux` dependency.
+**Reactor Netty HTTP Server** is a non-blocking, asynchronous server built on the Netty networking framework and used as the default runtime for handling HTTP requests in Spring WebFlux and Spring Cloud Gateway. It enables reactive, event-driven processing of web requests, making it well-suited for scalable and high-throughput applications. In Spring Boot, it's automatically configured when building reactive applications with the `spring-boot-starter-webflux` dependency.
 
 **Logback Access** is a module of the Logback logging library that provides HTTP access logging capabilities for servlet containers like Tomcat or Jetty. It allows logging of incoming HTTP requests and responses using customizable patterns and supports easy configuration through an XML file.
 
