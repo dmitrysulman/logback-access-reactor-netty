@@ -5,7 +5,7 @@
 [![CodeQL](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/codeql.yml/badge.svg)](https://github.com/dmitrysulman/logback-access-reactor-netty/actions/workflows/codeql.yml)
 [![codecov](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty/graph/badge.svg?token=LOEJQ7K8Z7)](https://codecov.io/gh/dmitrysulman/logback-access-reactor-netty)
 
-A Java/Kotlin library and Spring Boot Starter that integrates Logback Access with Reactor Netty HTTP server, providing comprehensive access logging capabilities for reactive applications.
+A Java/Kotlin library and Spring Boot Starter that integrates Logback Access with Reactor Netty HTTP server, providing comprehensive access logging capabilities for reactive web applications.
 
 ## Overview
 
