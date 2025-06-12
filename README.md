@@ -42,14 +42,14 @@ A Java/Kotlin library that integrates Logback Access with Reactor Netty HTTP ser
 <dependency>
     <groupId>io.github.dmitrysulman</groupId>
     <artifactId>logback-access-reactor-netty</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
 </dependency>
 ```
 
 #### Gradle
 
 ```
-implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.0.6")
+implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.0.7")
 ```
 
 ### Basic Setup
