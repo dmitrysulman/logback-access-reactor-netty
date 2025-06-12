@@ -169,6 +169,32 @@ class ReactorNettyAccessLogFactoryAutoConfigurationTests {
     }
 
     @Test
+    fun `should fail on not existing file resource`() {
+        ReactiveWebApplicationContextRunner()
+            .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
+            .withPropertyValues("logback.access.reactor.netty.config=file:logback-access-not-exist.xml")
+            .run { context ->
+                assertThat(context).hasFailed()
+                assertThat(context).failure.hasMessageContaining("Could not open URL [file:logback-access-not-exist.xml]")
+            }
+    }
+
+    @Test
+    fun `should fail on not existing classpath resource`() {
+        ReactiveWebApplicationContextRunner()
+            .withConfiguration(AutoConfigurations.of(ReactorNettyAccessLogFactoryAutoConfiguration::class.java))
+            .withPropertyValues("logback.access.reactor.netty.config=classpath:logback-access-not-exist.xml")
+            .run { context ->
+                assertThat(context).hasFailed()
+                assertThat(
+                    context,
+                ).failure.hasMessageContaining(
+                    "class path resource [logback-access-not-exist.xml] cannot be resolved to URL because it does not exist",
+                )
+            }
+    }
+
+    @Test
     fun `should load configuration from default filename configuration file resource`() {
         val resourceLoaderMock = mockk<ResourceLoader>()
         val resourceMock = mockk<Resource>()
