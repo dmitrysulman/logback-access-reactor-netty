@@ -27,12 +27,25 @@ A Java/Kotlin library and Spring Boot Starter that integrates Logback Access wit
 
 ## Usage
 
-### Adding dependency
+The Logback Access integration with Reactor Netty can be used in two ways:
 
-#### Spring Boot Starter
+1. As a Spring Boot Starter for reactive Spring Boot applications based on `spring-boot-starter-webflux`.
+2. As a standalone library for applications using Reactor Netty HTTP Server directly.
 
-##### Maven
+## Contents:
 
+- [Using as a Spring Boot Starter](#using-as-a-spring-boot-starter)
+   - [Adding dependency to your project](#adding-dependency-to-your-project) 
+- [Using as a standalone library](#using-as-a-standalone-library)
+   - [Adding dependency to your project](#adding-dependency-to-your-project-1)
+
+## Using as a Spring Boot Starter
+
+### Adding dependency to your project
+
+The Spring Boot Starter is published on [Maven Central](https://central.sonatype.com/artifact/io.github.dmitrysulman/logback-access-reactor-netty-spring-boot-starter). To add the dependency, use the following snippet according to your build system:
+
+#### Maven
 ```
 <dependency>
     <groupId>io.github.dmitrysulman</groupId>
@@ -41,15 +54,55 @@ A Java/Kotlin library and Spring Boot Starter that integrates Logback Access wit
 </dependency>
 ```
 
-##### Gradle
+#### Gradle
 
 ```
 implementation("io.github.dmitrysulman:logback-access-reactor-netty-spring-boot-starter:1.1.0")
 ```
 
-#### Standalone library
+### Configuration
 
-##### Maven
+#### Java
+
+```java
+@Configuration
+public class NettyAccessLogConfiguration {
+    @Bean
+    public NettyServerCustomizer accessLogNettyServerCustomizer() {
+        return (server) ->
+                server.accessLog(true, new ReactorNettyAccessLogFactory("path/to/your/logback-access.xml"));
+    }
+}
+```
+
+#### Kotlin
+```kotlin
+@Configuration
+class NettyAccessLogConfiguration {
+    @Bean
+    fun accessLogNettyServerCustomizer() = 
+        NettyServerCustomizer { server ->
+            server.enableLogbackAccess(ReactorNettyAccessLogFactory("path/to/your/logback-access.xml"))
+        }
+}
+```
+See [enableLogbackAccess()](https://dmitrysulman.github.io/logback-access-reactor-netty/logback-access-reactor-netty/io.github.dmitrysulman.logback.access.reactor.netty/enable-logback-access.html) extension function documentation.
+
+### Dependencies
+
+- Java 17+
+- Kotlin Standard Library 2.1.21
+- Spring Boot Starter WebFlux 3.4.6+ (should be explicitly provided)
+- Logback-access 2.0.6
+- SLF4J 2.0.17
+
+## Using as a standalone library
+
+### Adding dependency to your project
+
+The library is published on [Maven Central](https://central.sonatype.com/artifact/io.github.dmitrysulman/logback-access-reactor-netty). To add the dependency, use the following snippet according to your build system: 
+
+#### Maven
 
 ```
 <dependency>
@@ -106,45 +159,7 @@ var factory = new ReactorNettyAccessLogFactory(
 );
 ```
 
-### Spring Boot configuration
-
-#### Java
-
-```java
-@Configuration
-public class NettyAccessLogConfiguration {
-    @Bean
-    public NettyServerCustomizer accessLogNettyServerCustomizer() {
-        return (server) ->
-                server.accessLog(true, new ReactorNettyAccessLogFactory("path/to/your/logback-access.xml"));
-    }
-}
-```
-
-#### Kotlin
-```kotlin
-@Configuration
-class NettyAccessLogConfiguration {
-    @Bean
-    fun accessLogNettyServerCustomizer() = 
-        NettyServerCustomizer { server ->
-            server.enableLogbackAccess(ReactorNettyAccessLogFactory("path/to/your/logback-access.xml"))
-        }
-}
-```
-See [enableLogbackAccess()](https://dmitrysulman.github.io/logback-access-reactor-netty/logback-access-reactor-netty/io.github.dmitrysulman.logback.access.reactor.netty/enable-logback-access.html) extension function documentation.
-
-## Dependencies
-
-### Spring Boot Starter
-
-- Java 17+
-- Kotlin Standard Library 2.1.21
-- Spring Boot Starter WebFlux 3.4.6+ (should be explicitly provided)
-- Logback-access 2.0.6
-- SLF4J 2.0.17
-
-### Standalone library
+### Dependencies
 
 - Java 17+
 - Kotlin Standard Library 2.1.21
@@ -152,7 +167,7 @@ See [enableLogbackAccess()](https://dmitrysulman.github.io/logback-access-reacto
 - Logback-access 2.0.6
 - SLF4J 2.0.17
 
-## Documentation
+## API documentation
 
 - [Java API (Javadoc)](https://javadoc.io/doc/io.github.dmitrysulman/logback-access-reactor-netty/latest/index.html)
 - [Kotlin API (KDoc)](https://dmitrysulman.github.io/logback-access-reactor-netty/)
