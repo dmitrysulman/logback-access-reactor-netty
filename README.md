@@ -7,6 +7,22 @@
 
 A Java/Kotlin library and Spring Boot Starter that integrates Logback Access with Reactor Netty HTTP server, providing comprehensive access logging capabilities for reactive web applications.
 
+## Contents:
+
+- [Overview](#overview)
+- [Features](#features)
+- [Usage](#usage)
+- [Using as a Spring Boot Starter](#using-as-a-spring-boot-starter)
+  - [Adding Spring Boot Starter to your project](#adding-spring-boot-starter-to-your-project)
+  - [Configuration](#configuration)
+  - [Dependencies](#dependencies)
+- [Using as a standalone library](#using-as-a-standalone-library)
+  - [Adding dependency to your project](#adding-dependency-to-your-project)
+  - [Basic setup](#basic-setup)
+  - [Custom configuration](#custom-configuration)
+  - [Dependencies](#dependencies-1)
+- [API documentation](#api-documentation)
+
 ## Overview
 
 **Reactor Netty HTTP Server** is a non-blocking, asynchronous server built on the Netty networking framework and used as the default runtime for handling HTTP requests in Spring WebFlux and Spring Cloud Gateway. It enables reactive, event-driven processing of web requests, making it well-suited for scalable and high-throughput applications. In Spring Boot, it's automatically configured when building reactive applications with the `spring-boot-starter-webflux` dependency.
@@ -32,16 +48,9 @@ The Logback Access integration with Reactor Netty can be used in two ways:
 1. As a Spring Boot Starter for reactive Spring Boot applications based on `spring-boot-starter-webflux`.
 2. As a standalone library for applications using Reactor Netty HTTP Server directly.
 
-## Contents:
-
-- [Using as a Spring Boot Starter](#using-as-a-spring-boot-starter)
-   - [Adding dependency to your project](#adding-dependency-to-your-project) 
-- [Using as a standalone library](#using-as-a-standalone-library)
-   - [Adding dependency to your project](#adding-dependency-to-your-project-1)
-
 ## Using as a Spring Boot Starter
 
-### Adding dependency to your project
+### Adding Spring Boot Starter to your project
 
 The Spring Boot Starter is published on [Maven Central](https://central.sonatype.com/artifact/io.github.dmitrysulman/logback-access-reactor-netty-spring-boot-starter). To add the dependency, use the following snippet according to your build system:
 
@@ -142,7 +151,7 @@ HttpServer.create()
           .block()
 ```
 
-### Configuration
+### Custom configuration
 
 The library can be configured in several ways:
 
@@ -169,7 +178,8 @@ var factory = new ReactorNettyAccessLogFactory(
 
 ## API documentation
 
-- [Java API (Javadoc)](https://javadoc.io/doc/io.github.dmitrysulman/logback-access-reactor-netty/latest/index.html)
+- [Java API (Javadoc) - Spring Boot Starter](https://javadoc.io/doc/io.github.dmitrysulman/logback-access-reactor-netty-spring-boot-starter/latest/index.html)
+- [Java API (Javadoc) - Standalone library](https://javadoc.io/doc/io.github.dmitrysulman/logback-access-reactor-netty/latest/index.html)
 - [Kotlin API (KDoc)](https://dmitrysulman.github.io/logback-access-reactor-netty/)
 
 ## Author
