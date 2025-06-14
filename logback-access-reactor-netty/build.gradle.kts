@@ -1,5 +1,5 @@
 plugins {
-    id("conventions")
+    alias(libs.plugins.conventions)
 }
 
 description = "Logback Access integration with Reactor Netty"

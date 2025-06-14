@@ -84,16 +84,24 @@ dokka {
         }
         externalDocumentationLinks {
             register("reactor-netty-docs") {
-                url("https://projectreactor.io/docs/netty/${libs.versions.reactorNetty.get()}/api/")
-                packageListUrl("https://projectreactor.io/docs/netty/${libs.versions.reactorNetty.get()}/api/package-list")
+                url("https://projectreactor.io/docs/netty/release/api/")
+                packageListUrl("https://projectreactor.io/docs/netty/release/api/package-list")
             }
             register("logback-access-docs") {
-                url("https://javadoc.io/doc/ch.qos.logback.access/logback-access-common/${libs.versions.logbackAccess.get()}/")
-                packageListUrl("https://javadoc.io/doc/ch.qos.logback.access/logback-access-common/${libs.versions.logbackAccess.get()}/element-list")
+                url("https://javadoc.io/doc/ch.qos.logback.access/logback-access-common/latest/")
+                packageListUrl("https://javadoc.io/doc/ch.qos.logback.access/logback-access-common/latest/element-list")
             }
             register("logback-core-docs") {
-                url("https://javadoc.io/doc/ch.qos.logback/logback-core/${libs.versions.logbackClassic.get()}/")
-                packageListUrl("https://javadoc.io/doc/ch.qos.logback/logback-core/${libs.versions.logbackClassic.get()}/element-list")
+                url("https://javadoc.io/doc/ch.qos.logback/logback-core/latest/")
+                packageListUrl("https://javadoc.io/doc/ch.qos.logback/logback-core/latest/element-list")
+            }
+            register("spring-framework-docs") {
+                url("https://docs.spring.io/spring-framework/docs/current/javadoc-api/")
+                packageListUrl("https://docs.spring.io/spring-framework/docs/current/javadoc-api/element-list")
+            }
+            register("spring-boot-docs") {
+                url("https://docs.spring.io/spring-boot/api/java/")
+                packageListUrl("https://docs.spring.io/spring-boot/api/java/element-list")
             }
         }
     }

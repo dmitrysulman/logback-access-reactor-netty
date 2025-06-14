@@ -1,4 +1,5 @@
 [versions]
+assertj = "3.27.3"
 dokka = "2.0.0"
 jackson = "2.19.0"
 java = "17"
@@ -14,8 +15,10 @@ logbackClassic = "1.5.18"
 mockk = "1.14.2"
 reactorNetty = "1.2.7"
 slf4j = "2.0.17"
+springBoot = "3.4.6"
 
 [libraries]
+assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 dokka-plugin = { group = "org.jetbrains.dokka", name = "org.jetbrains.dokka.gradle.plugin", version.ref = "dokka" }
 dokka-javadoc-plugin = { group = "org.jetbrains.dokka-javadoc", name = "org.jetbrains.dokka-javadoc.gradle.plugin", version.ref = "dokka" }
 jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
@@ -31,7 +34,15 @@ logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 reactorNetty-http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "reactorNetty" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+spring-boot-autoconfigureProcessor = { group = "org.springframework.boot", name = "spring-boot-autoconfigure-processor", version.ref = "springBoot" }
+spring-boot-configurationProcessor = { group = "org.springframework.boot", name = "spring-boot-configuration-processor", version.ref = "springBoot" }
+spring-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter", version.ref = "springBoot" }
+spring-boot-starter-reactorNetty = { group = "org.springframework.boot", name = "spring-boot-starter-reactor-netty", version.ref = "springBoot" }
+spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "springBoot" }
+spring-boot-starter-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux", version.ref = "springBoot" }
 
 [plugins]
 dokka = { id = "org.jetbrains.dokka" }
+conventions = { id = "conventions" }
 jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
+kotlin-springPlugin = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }

@@ -1,0 +1,11 @@
+<configuration>
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <springProfile name="profile">
+        <encoder>
+            <pattern>common</pattern>
+        </encoder>
+    </springProfile>
+</appender>
+
+<appender-ref ref="STDOUT" />
+</configuration>

@@ -4,4 +4,4 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-include("logback-access-reactor-netty")
+include("logback-access-reactor-netty", "logback-access-reactor-netty-spring-boot-starter")

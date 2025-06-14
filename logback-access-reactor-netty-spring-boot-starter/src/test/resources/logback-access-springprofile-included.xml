@@ -1,0 +1,3 @@
+<configuration>
+    <include file="src/test/resources/logback-access-springprofile-dev.xml" />
+</configuration>

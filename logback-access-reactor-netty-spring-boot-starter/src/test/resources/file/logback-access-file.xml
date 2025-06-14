@@ -1,0 +1,4 @@
+<configuration>
+    <appender name="FILE" class="io.github.dmitrysulman.logback.access.reactor.netty.EventCaptureAppender" />
+    <appender-ref ref="FILE" />
+</configuration>
