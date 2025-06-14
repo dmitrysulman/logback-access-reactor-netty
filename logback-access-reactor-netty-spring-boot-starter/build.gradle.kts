@@ -22,4 +22,6 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.spring.boot.starter.webflux)
+
+    testRuntimeOnly(libs.junit.platformLauncher)
 }
