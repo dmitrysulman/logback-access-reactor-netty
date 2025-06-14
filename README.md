@@ -14,14 +14,14 @@ A Java/Kotlin library and Spring Boot Starter that integrates Logback Access wit
 - [Usage](#usage)
 - [Using as a Spring Boot Starter](#using-as-a-spring-boot-starter)
   - [Adding Spring Boot Starter to your project](#adding-spring-boot-starter-to-your-project)
-  - [Configuration](#configuration)
+  - [Customizing Logback Access configuration](#customizing-logback-access-configuration)
     - [Application properties](#application-properties)
     - [Profile-specific configuration](#profile-specific-configuration)
   - [Dependencies](#dependencies)
 - [Using as a standalone library](#using-as-a-standalone-library)
   - [Adding dependency to your project](#adding-dependency-to-your-project)
   - [Basic setup](#basic-setup)
-  - [Customize Logback Access configuration](#customize-logback-access-configuration)
+  - [Logback Access configuration](#logback-access-configuration)
   - [Dependencies](#dependencies-1)
 - [API documentation](#api-documentation)
 - [See also](#see-also)
@@ -73,13 +73,15 @@ implementation("io.github.dmitrysulman:logback-access-reactor-netty-spring-boot-
 </dependency>
 ```
 
-### Configuration
+### Customizing Logback Access configuration
 
 Default Spring Boot auto-configuration uses the `logback-access.xml` file from the current directory or the classpath, with a fallback to the [Common Log Format](https://en.wikipedia.org/wiki/Common_Log_Format).
 
+Set the `logback.access.reactor.netty.config` application property to specify the location of the configuration file. The property value is resolved as a [resource](https://docs.spring.io/spring-framework/reference/core/resources.html), which means you can use prefixes like `file:` or `classpath:`.
+
 #### Application properties
 
-Several application properties can be specified inside `application.properties` file or `application.yaml` file, or as command line arguments:
+Several application properties can be specified in the `application.properties` or `application.yaml` file, or passed as command-line arguments:
 
 | Name                                   | Description                                             | Default Value        |
 |:---------------------------------------|:--------------------------------------------------------|:---------------------|
@@ -163,9 +165,9 @@ HttpServer.create()
           .block()
 ```
 
-### Customize Logback Access configuration
+### Logback Access configuration
 
-The library can be configured in several ways:
+Logback Access can be configured in several ways:
 
 1. **Default configuration** uses the `logback-access.xml` file from the current directory or the classpath, with a fallback to the [Common Log Format](https://en.wikipedia.org/wiki/Common_Log_Format).
 2. **System property.** Set `-Dlogback.access.reactor.netty.config` property to specify configuration file location.
