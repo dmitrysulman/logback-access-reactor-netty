@@ -15,6 +15,7 @@ A Java/Kotlin library and Spring Boot Starter that integrates Logback Access wit
 - [Using as a Spring Boot Starter](#using-as-a-spring-boot-starter)
   - [Adding Spring Boot Starter to your project](#adding-spring-boot-starter-to-your-project)
   - [Configuration](#configuration)
+    - [Application properties](#application-properties)
   - [Dependencies](#dependencies)
 - [Using as a standalone library](#using-as-a-standalone-library)
   - [Adding dependency to your project](#adding-dependency-to-your-project)
@@ -54,6 +55,12 @@ The Logback Access integration with Reactor Netty can be used in two ways:
 
 The Spring Boot Starter is published on [Maven Central](https://central.sonatype.com/artifact/io.github.dmitrysulman/logback-access-reactor-netty-spring-boot-starter). To add the dependency, use the following snippet according to your build system:
 
+#### Gradle
+
+```
+implementation("io.github.dmitrysulman:logback-access-reactor-netty-spring-boot-starter:1.1.0")
+```
+
 #### Maven
 ```
 <dependency>
@@ -63,14 +70,19 @@ The Spring Boot Starter is published on [Maven Central](https://central.sonatype
 </dependency>
 ```
 
-#### Gradle
-
-```
-implementation("io.github.dmitrysulman:logback-access-reactor-netty-spring-boot-starter:1.1.0")
-```
-
 ### Configuration
 
+Default Spring Boot auto-configuration uses the `logback-access.xml` file from the current directory or the classpath, with a fallback to the [Common Log Format](https://en.wikipedia.org/wiki/Common_Log_Format).
+
+#### Application properties
+
+Several application properties can be specified inside `application.properties` file or `application.yaml` file, or as command line arguments:
+
+| Name                                   | Description                                             | Default Value        |
+|:---------------------------------------|:--------------------------------------------------------|:---------------------|
+| `logback.access.reactor.netty.enabled` | Enable Logback Access Reactor Netty auto-configuration. | `true`               |
+| `logback.access.reactor.netty.config`  | Config file name.                                       | `logback-access.xml` |
+| `logback.access.reactor.netty.debug`   | Enable debug mode.                                      | `false`              |
 
 ### Dependencies
 
@@ -86,6 +98,12 @@ implementation("io.github.dmitrysulman:logback-access-reactor-netty-spring-boot-
 
 The library is published on [Maven Central](https://central.sonatype.com/artifact/io.github.dmitrysulman/logback-access-reactor-netty). To add the dependency, use the following snippet according to your build system: 
 
+##### Gradle
+
+```
+implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.1.0")
+```
+
 #### Maven
 
 ```
@@ -94,12 +112,6 @@ The library is published on [Maven Central](https://central.sonatype.com/artifac
     <artifactId>logback-access-reactor-netty</artifactId>
     <version>1.1.0</version>
 </dependency>
-```
-
-##### Gradle
-
-```
-implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.1.0")
 ```
 
 ### Basic Setup
@@ -134,7 +146,7 @@ HttpServer.create()
 
 The library can be configured in several ways:
 
-1. **Default configuration** uses the `logback-access.xml` file from the classpath or the current directory, with a fallback to the [Common Log Format](https://en.wikipedia.org/wiki/Common_Log_Format).
+1. **Default configuration** uses the `logback-access.xml` file from the current directory or the classpath, with a fallback to the [Common Log Format](https://en.wikipedia.org/wiki/Common_Log_Format).
 2. **System property.** Set `-Dlogback.access.reactor.netty.config` property to specify configuration file location.
 3. **Programmatic configuration.** Provide configuration file filename or URL of the classpath resource directly:
 
