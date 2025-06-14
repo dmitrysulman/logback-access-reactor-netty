@@ -16,6 +16,7 @@ A Java/Kotlin library and Spring Boot Starter that integrates Logback Access wit
   - [Adding Spring Boot Starter to your project](#adding-spring-boot-starter-to-your-project)
   - [Configuration](#configuration)
     - [Application properties](#application-properties)
+    - [Profile-specific configuration](#profile-specific-configuration)
   - [Dependencies](#dependencies)
 - [Using as a standalone library](#using-as-a-standalone-library)
   - [Adding dependency to your project](#adding-dependency-to-your-project)
@@ -23,6 +24,7 @@ A Java/Kotlin library and Spring Boot Starter that integrates Logback Access wit
   - [Customize Logback Access configuration](#customize-logback-access-configuration)
   - [Dependencies](#dependencies-1)
 - [API documentation](#api-documentation)
+- [See also](#see-also)
 
 ## Overview
 
@@ -83,6 +85,24 @@ Several application properties can be specified inside `application.properties` 
 | `logback.access.reactor.netty.enabled` | Enable Logback Access Reactor Netty auto-configuration. | `true`               |
 | `logback.access.reactor.netty.config`  | Config file name.                                       | `logback-access.xml` |
 | `logback.access.reactor.netty.debug`   | Enable debug mode.                                      | `false`              |
+
+#### Profile-specific configuration
+
+The `<springProfile>` tag allows you to conditionally include or exclude parts of the configuration based on the active Spring profiles. You can use it anywhere within the `<configuration>` element. Specify the applicable profile using the `name` attribute, which can be either a single profile name (e.g., `staging`) or a profile expression. For more details, see the [Spring Boot Logback Extensions Profile-specific Configuration reference guide](https://docs.spring.io/spring-boot/reference/features/logging.html#features.logging.logback-extensions.profile-specific), which describes the same usage. There are several examples:
+
+```xml
+<springProfile name="staging">
+	<!-- configuration to be enabled when the "staging" profile is active -->
+</springProfile>
+
+<springProfile name="dev | staging">
+	<!-- configuration to be enabled when the "dev" or "staging" profiles are active -->
+</springProfile>
+
+<springProfile name="!production">
+	<!-- configuration to be enabled when the "production" profile is not active -->
+</springProfile>
+```
 
 ### Dependencies
 
@@ -174,11 +194,11 @@ var factory = new ReactorNettyAccessLogFactory(
 - [Java API (Javadoc) - Standalone library](https://javadoc.io/doc/io.github.dmitrysulman/logback-access-reactor-netty/latest/index.html)
 - [Kotlin API (KDoc)](https://dmitrysulman.github.io/logback-access-reactor-netty/)
 
-## Author
-
-[Dmitry Sulman](https://www.linkedin.com/in/dmitrysulman/)
-
 ## See Also
 
 - [Reactor Netty HTTP Server Documentation](https://projectreactor.io/docs/netty/release/reference/http-server.html)
 - [Logback Access Documentation](https://logback.qos.ch/access.html)
+
+## Author
+
+[Dmitry Sulman](https://www.linkedin.com/in/dmitrysulman/)
