@@ -19,7 +19,7 @@ A Java/Kotlin library and Spring Boot Starter that integrates Logback Access wit
 - [Using as a standalone library](#using-as-a-standalone-library)
   - [Adding dependency to your project](#adding-dependency-to-your-project)
   - [Basic setup](#basic-setup)
-  - [Custom configuration](#custom-configuration)
+  - [Customize Logback Access configuration](#customize-logback-access-configuration)
   - [Dependencies](#dependencies-1)
 - [API documentation](#api-documentation)
 
@@ -71,31 +71,6 @@ implementation("io.github.dmitrysulman:logback-access-reactor-netty-spring-boot-
 
 ### Configuration
 
-#### Java
-
-```java
-@Configuration
-public class NettyAccessLogConfiguration {
-    @Bean
-    public NettyServerCustomizer accessLogNettyServerCustomizer() {
-        return (server) ->
-                server.accessLog(true, new ReactorNettyAccessLogFactory("path/to/your/logback-access.xml"));
-    }
-}
-```
-
-#### Kotlin
-```kotlin
-@Configuration
-class NettyAccessLogConfiguration {
-    @Bean
-    fun accessLogNettyServerCustomizer() = 
-        NettyServerCustomizer { server ->
-            server.enableLogbackAccess(ReactorNettyAccessLogFactory("path/to/your/logback-access.xml"))
-        }
-}
-```
-See [enableLogbackAccess()](https://dmitrysulman.github.io/logback-access-reactor-netty/logback-access-reactor-netty/io.github.dmitrysulman.logback.access.reactor.netty/enable-logback-access.html) extension function documentation.
 
 ### Dependencies
 
@@ -129,6 +104,8 @@ implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.1.0")
 
 ### Basic Setup
 
+To enable Logback Access integration with Reactor Netty, create a new instance of `ReactorNettyAccessLogFactory` and pass it to the `HttpServer.accessLog()` method. 
+
 #### Java
 
 ```java
@@ -142,6 +119,8 @@ HttpServer.create()
 
 #### Kotlin
 
+For Kotlin, a convenient [enableLogbackAccess()](https://dmitrysulman.github.io/logback-access-reactor-netty/logback-access-reactor-netty/io.github.dmitrysulman.logback.access.reactor.netty/enable-logback-access.html) extension function is provided to pass the factory instance.
+
 ```kotlin
 val factory = ReactorNettyAccessLogFactory()
 HttpServer.create()
@@ -151,13 +130,14 @@ HttpServer.create()
           .block()
 ```
 
-### Custom configuration
+### Customize Logback Access configuration
 
 The library can be configured in several ways:
 
 1. **Default configuration** uses the `logback-access.xml` file from the classpath or the current directory, with a fallback to the [Common Log Format](https://en.wikipedia.org/wiki/Common_Log_Format).
 2. **System property.** Set `-Dlogback.access.reactor.netty.config` property to specify configuration file location.
 3. **Programmatic configuration.** Provide configuration file filename or URL of the classpath resource directly:
+
 ```java
 // Using specific configuration file by the filename
 var factory = new ReactorNettyAccessLogFactory("/path/to/logback-access.xml");
