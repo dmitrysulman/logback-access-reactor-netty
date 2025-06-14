@@ -59,12 +59,13 @@ The Spring Boot Starter is published on [Maven Central](https://central.sonatype
 
 #### Gradle
 
-```
+```kotlin
 implementation("io.github.dmitrysulman:logback-access-reactor-netty-spring-boot-starter:1.1.0")
 ```
 
 #### Maven
-```
+
+```xml
 <dependency>
     <groupId>io.github.dmitrysulman</groupId>
     <artifactId>logback-access-reactor-netty-spring-boot-starter</artifactId>
@@ -120,13 +121,13 @@ The library is published on [Maven Central](https://central.sonatype.com/artifac
 
 ##### Gradle
 
-```
+```kotlin
 implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.1.0")
 ```
 
 #### Maven
 
-```
+```xml
 <dependency>
     <groupId>io.github.dmitrysulman</groupId>
     <artifactId>logback-access-reactor-netty</artifactId>
