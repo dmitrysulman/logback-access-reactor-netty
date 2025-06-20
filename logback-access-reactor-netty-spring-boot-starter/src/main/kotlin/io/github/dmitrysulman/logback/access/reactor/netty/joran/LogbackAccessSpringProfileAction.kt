@@ -11,6 +11,7 @@ import org.xml.sax.Attributes
  *
  * See [SpringProfileAction](https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/logging/logback/SpringProfileAction.java).
  *
+ * @author Dmitry Sulman
  * @see [LogbackAccessSpringProfileModel]
  * @see [LogbackAccessSpringProfileModelHandler]
  */

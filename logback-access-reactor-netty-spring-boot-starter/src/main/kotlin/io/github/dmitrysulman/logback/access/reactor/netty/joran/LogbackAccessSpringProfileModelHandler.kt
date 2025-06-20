@@ -12,6 +12,7 @@ import org.springframework.core.env.Environment
  *
  * See [SpringProfileModelHandler](https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/logging/logback/SpringProfileModelHandler.java).
  *
+ * @author Dmitry Sulman
  * @see [LogbackAccessSpringProfileModel]
  * @see [LogbackAccessSpringProfileAction]
  */

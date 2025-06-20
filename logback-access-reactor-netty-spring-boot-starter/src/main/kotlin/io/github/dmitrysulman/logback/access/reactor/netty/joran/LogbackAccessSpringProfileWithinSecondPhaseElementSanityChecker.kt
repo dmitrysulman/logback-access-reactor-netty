@@ -10,6 +10,8 @@ import ch.qos.logback.core.spi.ContextAwareBase
  * within second-phase elements.
  *
  * See [SpringProfileIfNestedWithinSecondPhaseElementSanityChecker](https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/logging/logback/SpringProfileIfNestedWithinSecondPhaseElementSanityChecker.java).
+ *
+ * @author Dmitry Sulman
  */
 class LogbackAccessSpringProfileWithinSecondPhaseElementSanityChecker :
     ContextAwareBase(),

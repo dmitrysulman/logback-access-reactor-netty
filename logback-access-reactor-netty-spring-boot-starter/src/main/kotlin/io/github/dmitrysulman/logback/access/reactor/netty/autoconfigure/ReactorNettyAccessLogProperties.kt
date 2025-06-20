@@ -4,6 +4,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
  * [@ConfigurationProperties][ConfigurationProperties] for the Logback Access integration with Reactor Netty.
+ *
+ * @author Dmitry Sulman
+ * @see ReactorNettyAccessLogFactoryAutoConfiguration
  */
 @ConfigurationProperties("logback.access.reactor.netty")
 class ReactorNettyAccessLogProperties {

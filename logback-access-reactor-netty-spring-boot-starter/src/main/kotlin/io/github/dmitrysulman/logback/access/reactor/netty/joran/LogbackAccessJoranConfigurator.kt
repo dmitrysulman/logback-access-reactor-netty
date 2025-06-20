@@ -12,6 +12,8 @@ import java.util.function.Supplier
  * Extended version of the Logback Access [JoranConfigurator] that adds support of `<springProfile>` tags.
  *
  * See [SpringBootJoranConfigurator](https://github.com/spring-projects/spring-boot/blob/main/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/logging/logback/SpringBootJoranConfigurator.java).
+ *
+ * @author Dmitry Sulman
  */
 class LogbackAccessJoranConfigurator(
     private val environment: Environment,

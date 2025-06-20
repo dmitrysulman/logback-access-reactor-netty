@@ -17,6 +17,9 @@ import reactor.netty.http.server.HttpServer
 
 /**
  * [Auto-configuration][EnableAutoConfiguration] for the Logback Access integration with Reactor Netty.
+ *
+ * @author Dmitry Sulman
+ * @see ReactorNettyAccessLogProperties
  */
 @AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)

@@ -6,6 +6,9 @@ import org.springframework.boot.web.server.WebServerFactoryCustomizer
 
 /**
  * [WebServerFactoryCustomizer] of the [NettyReactiveWebServerFactory] for the Logback Access integration.
+ *
+ * @author Dmitry Sulman
+ * @see ReactorNettyAccessLogFactoryAutoConfiguration
  */
 class ReactorNettyAccessLogWebServerFactoryCustomizer(
     private val enableAccessLog: Boolean,
