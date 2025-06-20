@@ -15,7 +15,7 @@ logbackClassic = "1.5.18"
 mockk = "1.14.2"
 reactorNetty = "1.2.7"
 slf4j = "2.0.17"
-springBoot = "3.5.1"
+springBoot = "3.5.3"
 
 [libraries]
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
