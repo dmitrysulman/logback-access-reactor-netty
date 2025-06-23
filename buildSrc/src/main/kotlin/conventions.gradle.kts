@@ -1,4 +1,5 @@
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
@@ -56,7 +57,13 @@ tasks.build {
     dependsOn(tasks.jacocoTestReport)
 }
 
-tasks.withType<Test>().configureEach {
+tasks.withType<KotlinCompile> {
+    compilerOptions {
+        freeCompilerArgs.set(listOf("-Xannotation-default-target=param-property"))
+    }
+}
+
+tasks.withType<Test> {
     useJUnitPlatform()
 }
 
