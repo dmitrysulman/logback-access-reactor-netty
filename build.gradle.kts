@@ -16,6 +16,12 @@ dependencies {
     dokka(project("logback-access-reactor-netty-spring-boot-starter"))
 }
 
+dokka {
+    dokkaPublications.html {
+        moduleName.set("Logback Access for Reactor Netty")
+    }
+}
+
 tasks.jreleaserFullRelease {
     subprojects.forEach {
         val copyStagingDeployToRoot by it.tasks.existing
@@ -28,12 +34,23 @@ tasks.jar {
 }
 
 tasks.dokkaGeneratePublicationHtml {
-    finalizedBy(createGoogleVerificationFile)
+    finalizedBy(createGoogleVerificationFile, addTitleToDokka)
 }
 
 val createGoogleVerificationFile by tasks.registering {
     doLast {
         File("./build/dokka/html/google2faf2af66cb652f4.html").writeText("google-site-verification: google2faf2af66cb652f4.html")
+    }
+}
+
+val addTitleToDokka by tasks.registering {
+    doLast {
+        val indexHtml = file("./build/dokka/html/index.html")
+        indexHtml.readText()
+            .replaceFirst("<title>All modules</title>", "<title>Logback Access for Reactor Netty Spring Boot Starter and Java/Kotlin library</title>")
+            .let {
+                indexHtml.writeText(it)
+            }
     }
 }
 
