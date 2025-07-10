@@ -27,6 +27,16 @@ tasks.jar {
     enabled = false
 }
 
+tasks.dokkaGeneratePublicationHtml {
+    finalizedBy(createGoogleVerificationFile)
+}
+
+val createGoogleVerificationFile by tasks.registering {
+    doLast {
+        File("./build/dokka/html/google2faf2af66cb652f4.html").writeText("google-site-verification: google2faf2af66cb652f4.html")
+    }
+}
+
 jreleaser {
     release {
         github {
