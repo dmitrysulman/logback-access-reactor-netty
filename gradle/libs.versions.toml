@@ -1,5 +1,5 @@
 [versions]
-assertj = "3.27.3"
+assertj = "3.27.4"
 dokka = "2.0.0"
 jackson = "2.19.2"
 java = "17"
