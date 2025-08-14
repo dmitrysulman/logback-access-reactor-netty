@@ -13,7 +13,7 @@ ktlintPlugin = "13.0.0"
 logbackAccess = "2.0.6"
 logbackClassic = "1.5.18"
 mockk = "1.14.5"
-reactorNetty = "1.2.8"
+reactorNetty = "1.2.9"
 slf4j = "2.0.17"
 springBoot = "3.5.4"
 
