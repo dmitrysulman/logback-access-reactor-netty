@@ -110,10 +110,9 @@ The `<springProfile>` tag allows you to conditionally include or exclude parts o
 ### Dependencies
 
 - Java 17+
-- Kotlin Standard Library 2.2.0
+- Kotlin Standard Library 2.2.10
 - Spring Boot Starter WebFlux 3.4.6+ (should be explicitly provided)
 - Logback-access 2.0.6
-- SLF4J 2.0.17
 
 ## Using as a standalone library
 
