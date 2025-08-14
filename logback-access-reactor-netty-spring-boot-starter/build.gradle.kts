@@ -10,7 +10,6 @@ dependencies {
     api(project(":logback-access-reactor-netty"))
 
     implementation(libs.spring.boot.starter)
-    implementation(libs.slf4j.api)
 
     provided(libs.spring.boot.starter.reactorNetty)
 
