@@ -185,7 +185,7 @@ var factory = new ReactorNettyAccessLogFactory(
 ### Dependencies
 
 - Java 17+
-- Kotlin Standard Library 2.2.0
+- Kotlin Standard Library 2.2.10
 - Reactor Netty HTTP Server 1.2.6+ (should be explicitly provided)
 - Logback-access 2.0.6
 - SLF4J 2.0.17
