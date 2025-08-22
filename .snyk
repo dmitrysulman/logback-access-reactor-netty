@@ -1,0 +1,9 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.1
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+   SNYK-JAVA-IONETTY-11799531:
+     - '*':
+         reason: False positive since there is no runtime dependency on io.netty:netty-codec-http2. Will be fixed in Reactor Netty 1.2.10: https://github.com/reactor/reactor-netty/pull/3876
+         expires: 2025-09-10T00:00:00.000Z
+         created: 2025-08-22T00:00:00.000Z
