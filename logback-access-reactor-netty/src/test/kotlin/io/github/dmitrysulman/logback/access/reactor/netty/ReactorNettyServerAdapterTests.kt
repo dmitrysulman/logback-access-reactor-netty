@@ -29,6 +29,7 @@ class ReactorNettyServerAdapterTests {
             mapOf(
                 "name1" to "value1",
                 "name2" to "value2",
+                "name3" to "value3",
                 "empty_value" to "",
             )
     }

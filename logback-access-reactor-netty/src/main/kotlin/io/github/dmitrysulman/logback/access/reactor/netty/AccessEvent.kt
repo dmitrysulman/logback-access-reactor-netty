@@ -120,7 +120,7 @@ class AccessEvent(
             ?.mapNotNull { (name, value) ->
                 if (name.isNullOrEmpty()) return@mapNotNull null
                 if (value == null) return@mapNotNull null
-                name.toString() to value.toString()
+                name.toString().lowercase() to value.toString()
             }?.toMap()
             ?: emptyMap()
     }
@@ -193,7 +193,7 @@ class AccessEvent(
 
     override fun getRemoteAddr() = _remoteAddr
 
-    override fun getRequestHeader(key: String) = _requestHeaderMap[key] ?: NA
+    override fun getRequestHeader(key: String) = _requestHeaderMap[key.lowercase()] ?: NA
 
     override fun getRequestHeaderNames(): Enumeration<String> = enumeration(_requestHeaderMap.keys)
 
@@ -223,7 +223,7 @@ class AccessEvent(
 
     override fun getServerAdapter() = _serverAdapter
 
-    override fun getResponseHeader(key: String) = _responseHeaderMap[key] ?: NA
+    override fun getResponseHeader(key: String) = _responseHeaderMap[key.lowercase()] ?: NA
 
     override fun getResponseHeaderMap() = _responseHeaderMap
 

@@ -188,7 +188,9 @@ class IntegrationTests {
         accessEvent.timeStamp shouldBeGreaterThan now
         accessEvent.remoteUser shouldBe "-"
         accessEvent.getRequestHeader(TEST_REQUEST_HEADER_NAME) shouldBe TEST_REQUEST_HEADER_VALUE
+        accessEvent.getRequestHeader(TEST_REQUEST_HEADER_NAME_IGNORE_CASE.lowercase()) shouldBe TEST_REQUEST_HEADER_VALUE_IGNORE_CASE
         accessEvent.getResponseHeader(TEST_RESPONSE_HEADER_NAME) shouldBe TEST_RESPONSE_HEADER_VALUE
+        accessEvent.getResponseHeader(TEST_RESPONSE_HEADER_NAME_IGNORE_CASE.lowercase()) shouldBe TEST_RESPONSE_HEADER_VALUE_IGNORE_CASE
         accessEvent.getCookie(TEST_COOKIE_NAME) shouldBe TEST_COOKIE_VALUE
         accessEvent.contentLength shouldBe (response.responseHeaders().get(CONTENT_LENGTH)?.toLongOrNull() ?: 0)
     }
@@ -206,6 +208,7 @@ class IntegrationTests {
                 .addHeader(REMOTE_HOST_HEADER, remoteHost)
                 .addHeader(REMOTE_ADDRESS_HEADER, remoteAddress)
                 .addHeader(TEST_RESPONSE_HEADER_NAME, TEST_RESPONSE_HEADER_VALUE)
+                .addHeader(TEST_RESPONSE_HEADER_NAME_IGNORE_CASE, TEST_RESPONSE_HEADER_VALUE_IGNORE_CASE)
                 .sendByteArray(Mono.just(responseContent.toByteArray()))
         }.bindNow()
 
@@ -223,8 +226,10 @@ class IntegrationTests {
     private fun performGetRequest(uri: String): Mono<HttpClientResponse> =
         client
             .port(server.port())
-            .headers { it.add(TEST_REQUEST_HEADER_NAME, TEST_REQUEST_HEADER_VALUE) }
-            .cookie(DefaultCookie(TEST_COOKIE_NAME, TEST_COOKIE_VALUE))
+            .headers {
+                it.add(TEST_REQUEST_HEADER_NAME, TEST_REQUEST_HEADER_VALUE)
+                it.add(TEST_REQUEST_HEADER_NAME_IGNORE_CASE, TEST_REQUEST_HEADER_VALUE_IGNORE_CASE)
+            }.cookie(DefaultCookie(TEST_COOKIE_NAME, TEST_COOKIE_VALUE))
             .get()
             .uri(uri)
             .response()
@@ -234,8 +239,12 @@ class IntegrationTests {
         private const val REMOTE_ADDRESS_HEADER = "Remote-Address"
         private const val TEST_RESPONSE_HEADER_NAME = "Test-Response-Header"
         private const val TEST_RESPONSE_HEADER_VALUE = "testResponseHeaderValue"
+        private const val TEST_RESPONSE_HEADER_NAME_IGNORE_CASE = "Test-Response-Header-Ignore-Case"
+        private const val TEST_RESPONSE_HEADER_VALUE_IGNORE_CASE = "testResponseHeaderValueIgnoreCase"
         private const val TEST_REQUEST_HEADER_NAME = "Test-Request-Header"
         private const val TEST_REQUEST_HEADER_VALUE = "testRequestHeaderValue"
+        private const val TEST_REQUEST_HEADER_NAME_IGNORE_CASE = "Test-Request-Header-Ignore-Case"
+        private const val TEST_REQUEST_HEADER_VALUE_IGNORE_CASE = "testRequestHeaderValueIgnoreCase"
         private const val TEST_COOKIE_NAME = "cookieName"
         private const val TEST_COOKIE_VALUE = "cookieValue"
     }

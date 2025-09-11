@@ -417,13 +417,22 @@ class AccessEventTests {
             mapOf(
                 "name1" to "value1",
                 "name2" to "value2",
+                "name3" to "value3",
                 "empty_value" to "",
             )
         accessEvent.requestHeaderNames
             .asIterator()
             .asSequence()
             .toList() shouldBe
-            listOf("name1", "name2", "empty_value")
+            listOf("name1", "name2", "name3", "empty_value")
+
+        accessEvent.getRequestHeader("name1") shouldBe "value1"
+        accessEvent.getRequestHeader("NaMe1") shouldBe "value1"
+        accessEvent.getRequestHeader("NAME1") shouldBe "value1"
+
+        accessEvent.getRequestHeader("name3") shouldBe "value3"
+        accessEvent.getRequestHeader("NaMe3") shouldBe "value3"
+        accessEvent.getRequestHeader("NAME3") shouldBe "value3"
     }
 
     @Test
@@ -438,10 +447,19 @@ class AccessEventTests {
             mapOf(
                 "name1" to "value1",
                 "name2" to "value2",
+                "name3" to "value3",
                 "empty_value" to "",
             )
         accessEvent.responseHeaderNameList shouldBe
-            listOf("name1", "name2", "empty_value")
+            listOf("name1", "name2", "name3", "empty_value")
+
+        accessEvent.getResponseHeader("name1") shouldBe "value1"
+        accessEvent.getResponseHeader("NaMe1") shouldBe "value1"
+        accessEvent.getResponseHeader("NAME1") shouldBe "value1"
+
+        accessEvent.getResponseHeader("name3") shouldBe "value3"
+        accessEvent.getResponseHeader("NaMe3") shouldBe "value3"
+        accessEvent.getResponseHeader("NAME3") shouldBe "value3"
     }
 
     @Test
