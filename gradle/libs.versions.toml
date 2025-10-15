@@ -1,7 +1,6 @@
 [versions]
-assertj = "3.27.5"
-dokka = "2.0.0"
-jackson = "2.19.2"
+assertj = "3.27.6"
+dokka = "2.1.0"
 java = "17"
 jreleaser = "1.20.0"
 junit = "5.14.0"
@@ -11,9 +10,9 @@ kotlinxCoroutines = "1.10.2"
 ktlint = "1.7.1"
 ktlintPlugin = "13.1.0"
 logbackAccess = "2.0.6"
-logbackClassic = "1.5.18"
-mockk = "1.14.5"
-reactorNetty = "1.2.10"
+logbackClassic = "1.5.19"
+mockk = "1.14.6"
+reactorNetty = "1.2.11"
 slf4j = "2.0.17"
 springBoot = "3.5.6"
 
@@ -21,7 +20,6 @@ springBoot = "3.5.6"
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 dokka-plugin = { group = "org.jetbrains.dokka", name = "org.jetbrains.dokka.gradle.plugin", version.ref = "dokka" }
 dokka-javadoc-plugin = { group = "org.jetbrains.dokka-javadoc", name = "org.jetbrains.dokka-javadoc.gradle.plugin", version.ref = "dokka" }
-jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
 junit-platformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 kotest-assertions-core-jvm = { group = "io.kotest", name = "kotest-assertions-core-jvm", version.ref = "kotest" }
