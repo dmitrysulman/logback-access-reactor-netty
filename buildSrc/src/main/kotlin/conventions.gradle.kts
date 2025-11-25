@@ -92,7 +92,7 @@ dokka {
         externalDocumentationLinks {
             register("reactor-netty-docs") {
                 url("https://projectreactor.io/docs/netty/release/api/")
-                packageListUrl("https://projectreactor.io/docs/netty/release/api/package-list")
+                packageListUrl("https://projectreactor.io/docs/netty/release/api/element-list")
             }
             register("logback-access-docs") {
                 url("https://javadoc.io/doc/ch.qos.logback.access/logback-access-common/latest/")
