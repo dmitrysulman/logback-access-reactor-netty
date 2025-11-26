@@ -60,7 +60,7 @@ The Spring Boot Starter is published on [Maven Central](https://central.sonatype
 #### Gradle
 
 ```kotlin
-implementation("io.github.dmitrysulman:logback-access-reactor-netty-spring-boot-starter:1.1.7")
+implementation("io.github.dmitrysulman:logback-access-reactor-netty-spring-boot-starter:1.1.9")
 ```
 
 #### Maven
@@ -69,7 +69,7 @@ implementation("io.github.dmitrysulman:logback-access-reactor-netty-spring-boot-
 <dependency>
     <groupId>io.github.dmitrysulman</groupId>
     <artifactId>logback-access-reactor-netty-spring-boot-starter</artifactId>
-    <version>1.1.7</version>
+    <version>1.1.9</version>
 </dependency>
 ```
 
@@ -112,7 +112,7 @@ The `<springProfile>` tag allows you to conditionally include or exclude parts o
 - Java 17+
 - Kotlin Standard Library 2.2.21
 - Spring Boot Starter WebFlux 3.4.6+ (should be explicitly provided)
-- Logback-access 2.0.6
+- Logback-access 2.0.7
 
 ## Using as a standalone library
 
@@ -123,7 +123,7 @@ The library is published on [Maven Central](https://central.sonatype.com/artifac
 ##### Gradle
 
 ```kotlin
-implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.1.7")
+implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.1.9")
 ```
 
 #### Maven
@@ -132,7 +132,7 @@ implementation("io.github.dmitrysulman:logback-access-reactor-netty:1.1.7")
 <dependency>
     <groupId>io.github.dmitrysulman</groupId>
     <artifactId>logback-access-reactor-netty</artifactId>
-    <version>1.1.7</version>
+    <version>1.1.9</version>
 </dependency>
 ```
 
@@ -187,7 +187,7 @@ var factory = new ReactorNettyAccessLogFactory(
 - Java 17+
 - Kotlin Standard Library 2.2.21
 - Reactor Netty HTTP Server 1.2.6+ (should be explicitly provided)
-- Logback-access 2.0.6
+- Logback-access 2.0.7
 - SLF4J 2.0.17
 
 ## API documentation
