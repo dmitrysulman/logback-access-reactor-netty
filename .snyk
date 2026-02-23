@@ -2,8 +2,3 @@
 version: v1.25.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
-   SNYK-JAVA-IONETTY-14423947:
-     - '*':
-         reason: Fixed in Reactor Netty 1.2.14 and Spring Boot 3.5.10
-         expires: 2026-02-01T00:00:00.000Z
-         created: 2026-01-01T00:00:00.000Z
