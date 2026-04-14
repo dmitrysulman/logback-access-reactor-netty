@@ -2,9 +2,9 @@ name: Snyk Dependencies Check
 
 on:
   push:
-    branches: ["main" ]
+    branches: [ "main", "1.1.x" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main", "1.1.x" ]
 
 permissions:
   contents: read
