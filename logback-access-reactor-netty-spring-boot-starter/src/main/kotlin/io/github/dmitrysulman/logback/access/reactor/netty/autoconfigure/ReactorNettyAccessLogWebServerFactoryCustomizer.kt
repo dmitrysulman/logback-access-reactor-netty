@@ -1,7 +1,7 @@
 package io.github.dmitrysulman.logback.access.reactor.netty.autoconfigure
 
 import io.github.dmitrysulman.logback.access.reactor.netty.ReactorNettyAccessLogFactory
-import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
+import org.springframework.boot.reactor.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 
 /**

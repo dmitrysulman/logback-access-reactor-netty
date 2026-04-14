@@ -17,8 +17,7 @@ class ReactorNettyServerAdapter(
             .responseHeaderIterator()
             ?.asSequence()
             ?.mapNotNull { (name, value) ->
-                if (name.isNullOrEmpty()) return@mapNotNull null
-                if (value == null) return@mapNotNull null
+                if (name.isEmpty()) return@mapNotNull null
                 name.toString().lowercase() to value.toString()
             }?.toMap()
             ?: emptyMap()

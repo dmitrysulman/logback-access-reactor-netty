@@ -15,6 +15,7 @@ import io.mockk.every
 import io.mockk.spyk
 import org.junit.jupiter.api.Test
 import java.io.FileNotFoundException
+import java.net.URI
 import java.net.URL
 
 class ReactorNettyAccessLogFactoryTests {
@@ -104,7 +105,7 @@ class ReactorNettyAccessLogFactoryTests {
 
     @Test
     fun `test not existing file url from constructor parameter`() {
-        shouldThrowExactly<JoranException> { ReactorNettyAccessLogFactory(URL("file:logback-access-not-exist.xml")) }
+        shouldThrowExactly<JoranException> { ReactorNettyAccessLogFactory(URI("file:logback-access-not-exist.xml").toURL()) }
     }
 
     @Test

@@ -18,17 +18,9 @@ val headerList =
             override val key = ""
             override val value = "empty_name"
         },
-        object : Map.Entry<CharSequence?, CharSequence> {
-            override val key = null
-            override val value = "null_name"
-        },
         object : Map.Entry<CharSequence, CharSequence> {
             override val key = "empty_value"
             override val value = ""
-        },
-        object : Map.Entry<CharSequence, CharSequence?> {
-            override val key = "null_value"
-            override val value = null
         },
     )
 

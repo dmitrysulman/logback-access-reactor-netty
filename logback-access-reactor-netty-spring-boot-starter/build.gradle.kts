@@ -19,8 +19,7 @@ dependencies {
     testImplementation(libs.assertj.core)
     testImplementation(libs.kotest.assertions.core.jvm)
     testImplementation(libs.mockk)
-    testImplementation(libs.spring.boot.starter.test)
-    testImplementation(libs.spring.boot.starter.webflux)
+    testImplementation(libs.spring.boot.starter.webflux.test)
 
     testRuntimeOnly(libs.junit.platformLauncher)
 }

@@ -259,7 +259,7 @@ class AccessEventTests {
         accessEvent.requestParameterMap shouldContainKey "param 1"
         accessEvent.requestParameterMap shouldContainKey "param2"
         accessEvent.getRequestParameter("param 1") shouldBe arrayOf("value 1")
-        accessEvent.getRequestParameter("param2") shouldBe arrayOf("v a+l&u=e\$#()@!123±/\\<>,\";'%?")
+        accessEvent.getRequestParameter("param2") shouldBe arrayOf("v a+l&u=e$#()@!123±/\\<>,\";'%?")
     }
 
     @Test
@@ -386,12 +386,10 @@ class AccessEventTests {
         every { cookieWithNullValue.value() } returns null
         every { mockArgProvider.cookies() } returns
             mapOf(
-                null to setOf(DefaultCookie(COOKIE, VALUE)),
                 "" to setOf(DefaultCookie(COOKIE, VALUE)),
                 "   " to setOf(DefaultCookie(COOKIE, VALUE)),
                 "()<>@,;:" to setOf(DefaultCookie(COOKIE, VALUE)),
                 "empty" to emptySet(),
-                "null" to setOf(null),
                 "nullValue" to setOf(cookieWithNullValue),
                 "cookie1" to setOf(DefaultCookie("cookie1", "value1")),
             )

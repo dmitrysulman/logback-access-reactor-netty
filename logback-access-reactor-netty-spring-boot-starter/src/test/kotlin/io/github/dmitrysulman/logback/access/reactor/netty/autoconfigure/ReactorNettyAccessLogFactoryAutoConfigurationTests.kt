@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.beans.factory.getBeansOfType
 import org.springframework.boot.autoconfigure.AutoConfigurations
-import org.springframework.boot.autoconfigure.web.reactive.ReactiveWebServerFactoryAutoConfiguration
+import org.springframework.boot.reactor.netty.autoconfigure.NettyReactiveWebServerAutoConfiguration
 import org.springframework.boot.test.context.FilteredClassLoader
 import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner
@@ -136,7 +136,7 @@ class ReactorNettyAccessLogFactoryAutoConfigurationTests {
         ReactiveWebApplicationContextRunner()
             .withConfiguration(
                 AutoConfigurations.of(
-                    ReactiveWebServerFactoryAutoConfiguration::class.java,
+                    NettyReactiveWebServerAutoConfiguration::class.java,
                     ReactorNettyAccessLogFactoryAutoConfiguration::class.java,
                 ),
             ).withUserConfiguration(MockNettyAccessLogFactoryConfiguration::class.java)

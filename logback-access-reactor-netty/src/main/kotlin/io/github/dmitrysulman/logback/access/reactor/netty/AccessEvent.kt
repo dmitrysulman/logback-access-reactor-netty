@@ -91,7 +91,7 @@ class AccessEvent(
             .cookies()
             ?.asSequence()
             ?.mapNotNull { (name, values) ->
-                if (name.isNullOrBlank()) return@mapNotNull null
+                if (name.isBlank()) return@mapNotNull null
                 val value = values.firstOrNull()?.value() ?: return@mapNotNull null
                 name.toString() to value
             }?.toMap() ?: emptyMap()
@@ -100,7 +100,7 @@ class AccessEvent(
         argProvider
             .cookies()
             ?.mapNotNull { (name, values) ->
-                if (name.isNullOrBlank()) return@mapNotNull null
+                if (name.isBlank()) return@mapNotNull null
                 val value = values.firstOrNull()?.value() ?: return@mapNotNull null
                 try {
                     Cookie(name.toString(), value)
@@ -118,8 +118,7 @@ class AccessEvent(
             .requestHeaderIterator()
             ?.asSequence()
             ?.mapNotNull { (name, value) ->
-                if (name.isNullOrEmpty()) return@mapNotNull null
-                if (value == null) return@mapNotNull null
+                if (name.isEmpty()) return@mapNotNull null
                 name.toString().lowercase() to value.toString()
             }?.toMap()
             ?: emptyMap()
