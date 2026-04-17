@@ -21,7 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactor.awaitSingleOrNull
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -61,114 +60,109 @@ class IntegrationTests {
             "/test?name=v%20alue%21%40%23%24%25%5E%26%2A%28%29%3D%2B",
         ],
     )
-    fun `test basic requests`(uri: String): Unit =
-        runBlocking {
-            val accessLogFactory =
-                ReactorNettyAccessLogFactory("logback-access-stdout.xml", JoranConfigurator(), true)
+    suspend fun `test basic requests`(uri: String) {
+        val accessLogFactory =
+            ReactorNettyAccessLogFactory("logback-access-stdout.xml", JoranConfigurator(), true)
 
-            val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
-            server = createServer(accessLogFactory, "mock response")
-            client = createClient()
-            val response = performGetRequest(uri).awaitSingleOrNull()
-            response.shouldNotBeNull()
-            response.status().code() shouldBe 200
+        val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
+        server = createServer(accessLogFactory, "mock response")
+        client = createClient()
+        val response = performGetRequest(uri).awaitSingleOrNull()
+        response.shouldNotBeNull()
+        response.status().code() shouldBe 200
 
-            eventually(1.seconds) {
-                eventCaptureAppender.list.size shouldBe 1
-                val accessEvent = eventCaptureAppender.list[0]
-                accessEvent.sequenceNumber.shouldBeZero()
-                assertAccessEvent(accessEvent, response)
-            }
+        eventually(1.seconds) {
+            eventCaptureAppender.list.size shouldBe 1
+            val accessEvent = eventCaptureAppender.list[0]
+            accessEvent.sequenceNumber.shouldBeZero()
+            assertAccessEvent(accessEvent, response)
         }
+    }
 
     @Test
-    fun `test filter deny`(): Unit =
-        runBlocking {
-            val accessLogFactory =
-                ReactorNettyAccessLogFactory("logback-access-filter.xml", JoranConfigurator(), true)
+    suspend fun `test filter deny`() {
+        val accessLogFactory =
+            ReactorNettyAccessLogFactory("logback-access-filter.xml", JoranConfigurator(), true)
 
-            val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
-            server = createServer(accessLogFactory, "mock response")
-            client = createClient()
+        val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
+        server = createServer(accessLogFactory, "mock response")
+        client = createClient()
 
-            val responseDeny = performGetRequest("/test?filter=deny").awaitSingleOrNull()
-            responseDeny.shouldNotBeNull()
-            responseDeny.status().code() shouldBe 200
+        val responseDeny = performGetRequest("/test?filter=deny").awaitSingleOrNull()
+        responseDeny.shouldNotBeNull()
+        responseDeny.status().code() shouldBe 200
 
-            continually(1.seconds) {
-                eventCaptureAppender.list.shouldBeEmpty()
-            }
+        continually(1.seconds) {
+            eventCaptureAppender.list.shouldBeEmpty()
         }
+    }
 
     @ParameterizedTest
     @EnumSource(value = FilterReply::class, names = ["DENY"], mode = EnumSource.Mode.EXCLUDE)
-    fun `test filter allow`(filterReply: FilterReply): Unit =
-        runBlocking {
-            val accessLogFactory =
-                ReactorNettyAccessLogFactory("logback-access-filter.xml", JoranConfigurator(), true)
+    suspend fun `test filter allow`(filterReply: FilterReply) {
+        val accessLogFactory =
+            ReactorNettyAccessLogFactory("logback-access-filter.xml", JoranConfigurator(), true)
 
-            val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
-            server = createServer(accessLogFactory, "mock response")
-            client = createClient()
+        val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
+        server = createServer(accessLogFactory, "mock response")
+        client = createClient()
 
-            val responseAccept = performGetRequest("/test?filter=${filterReply.name}").awaitSingleOrNull()
-            responseAccept.shouldNotBeNull()
-            responseAccept.status().code() shouldBe 200
+        val responseAccept = performGetRequest("/test?filter=${filterReply.name}").awaitSingleOrNull()
+        responseAccept.shouldNotBeNull()
+        responseAccept.status().code() shouldBe 200
 
-            eventually(1.seconds) {
-                eventCaptureAppender.list.size shouldBe 1
-                val accessEvent = eventCaptureAppender.list[0]
-                assertAccessEvent(accessEvent, responseAccept)
-            }
+        eventually(1.seconds) {
+            eventCaptureAppender.list.size shouldBe 1
+            val accessEvent = eventCaptureAppender.list[0]
+            assertAccessEvent(accessEvent, responseAccept)
         }
+    }
 
     @Test
-    fun `test sequence number generator`(): Unit =
-        runBlocking {
-            val accessLogFactory =
-                ReactorNettyAccessLogFactory("logback-access-sequence-number-generator.xml", JoranConfigurator(), true)
+    suspend fun `test sequence number generator`() {
+        val accessLogFactory =
+            ReactorNettyAccessLogFactory("logback-access-sequence-number-generator.xml", JoranConfigurator(), true)
 
-            val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
-            server = createServer(accessLogFactory, "")
-            client = createClient()
+        val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
+        server = createServer(accessLogFactory, "")
+        client = createClient()
 
-            repeat(50) {
-                val response = performGetRequest("/test").awaitSingleOrNull()
-                response.shouldNotBeNull()
-                response.status().code() shouldBe 200
-            }
-
-            eventually(1.seconds) {
-                eventCaptureAppender.list.size shouldBe 50
-                eventCaptureAppender.list
-                    .sortedBy { it.timeStamp }
-                    .map { it.sequenceNumber }
-                    .shouldBeUnique()
-                    .shouldBeSorted()
-            }
+        repeat(50) {
+            val response = performGetRequest("/test").awaitSingleOrNull()
+            response.shouldNotBeNull()
+            response.status().code() shouldBe 200
         }
 
+        eventually(1.seconds) {
+            eventCaptureAppender.list.size shouldBe 50
+            eventCaptureAppender.list
+                .sortedBy { it.timeStamp }
+                .map { it.sequenceNumber }
+                .shouldBeUnique()
+                .shouldBeSorted()
+        }
+    }
+
     @Test
-    fun `performance test`(): Unit =
-        runBlocking {
-            val accessLogFactory =
-                ReactorNettyAccessLogFactory("logback-access-capture.xml", JoranConfigurator(), true)
+    suspend fun `performance test`() {
+        val accessLogFactory =
+            ReactorNettyAccessLogFactory("logback-access-capture.xml", JoranConfigurator(), true)
 
-            val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
-            server = createServer(accessLogFactory, "test")
-            client = createClient()
+        val eventCaptureAppender = accessLogFactory.accessContext.getAppender("CAPTURE") as EventCaptureAppender
+        server = createServer(accessLogFactory, "test")
+        client = createClient()
 
-            val jobs =
-                (1..5000).map {
-                    CoroutineScope(Dispatchers.Default).launch {
-                        val response = performGetRequest("/test").awaitSingleOrNull()
-                        response.shouldNotBeNull()
-                        response.status().code() shouldBe 200
-                    }
+        val jobs =
+            (1..5000).map {
+                CoroutineScope(Dispatchers.Default).launch {
+                    val response = performGetRequest("/test").awaitSingleOrNull()
+                    response.shouldNotBeNull()
+                    response.status().code() shouldBe 200
                 }
-            jobs.joinAll()
-            eventually(5.seconds) { eventCaptureAppender.list.size shouldBe jobs.size }
-        }
+            }
+        jobs.joinAll()
+        eventually(5.seconds) { eventCaptureAppender.list.size shouldBe jobs.size }
+    }
 
     private fun assertAccessEvent(
         accessEvent: IAccessEvent,
