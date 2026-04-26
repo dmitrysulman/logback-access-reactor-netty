@@ -67,7 +67,9 @@ jreleaser {
     }
     signing {
         setActive("ALWAYS")
-        armored = true
+        pgp {
+            armored = true
+        }
     }
     deploy {
         maven {
