@@ -5,7 +5,7 @@ java = "21"
 jreleaser = "1.23.0"
 junit = "6.0.3"
 kotest = "6.1.11"
-kotlin = "2.3.20"
+kotlin = "2.3.21"
 kotlinxCoroutines = "1.10.2"
 ktlint = "1.8.0"
 ktlintPlugin = "14.0.1"
@@ -14,7 +14,7 @@ logbackClassic = "1.5.32"
 mockk = "1.14.9"
 reactorNetty = "1.3.5"
 slf4j = "2.0.17"
-springBoot = "4.0.5"
+springBoot = "4.0.6"
 
 [libraries]
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
