@@ -57,12 +57,6 @@ tasks.build {
     dependsOn(tasks.jacocoTestReport)
 }
 
-tasks.withType<KotlinCompile> {
-    compilerOptions {
-        freeCompilerArgs.set(listOf("-Xannotation-default-target=param-property"))
-    }
-}
-
 tasks.withType<Test> {
     useJUnitPlatform()
 }
