@@ -24,7 +24,7 @@ dokka {
 
 tasks.jreleaserFullRelease {
     subprojects.forEach {
-        val copyStagingDeployToRoot by it.tasks.existing
+        val copyStagingDeployToRoot = it.tasks.named("copyStagingDeployToRoot")
         dependsOn(copyStagingDeployToRoot)
     }
 }
@@ -37,13 +37,13 @@ tasks.dokkaGeneratePublicationHtml {
     finalizedBy(createGoogleVerificationFile, addTitleToDokka)
 }
 
-val createGoogleVerificationFile by tasks.registering {
+val createGoogleVerificationFile = tasks.register("createGoogleVerificationFile") {
     doLast {
         File("./build/dokka/html/google2faf2af66cb652f4.html").writeText("google-site-verification: google2faf2af66cb652f4.html")
     }
 }
 
-val addTitleToDokka by tasks.registering {
+val addTitleToDokka = tasks.register("addTitleToDokka") {
     doLast {
         val indexHtml = file("./build/dokka/html/index.html")
         indexHtml.readText()

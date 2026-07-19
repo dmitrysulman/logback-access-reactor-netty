@@ -32,7 +32,7 @@ java {
     withSourcesJar()
 }
 
-val provided: Configuration by configurations.creating {
+val provided = configurations.create("provided") {
     isCanBeConsumed = false
     isCanBeResolved = false
 }
@@ -67,14 +67,14 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-val copyStagingDeployToRoot by tasks.registering(Copy::class) {
+tasks.register<Copy>("copyStagingDeployToRoot") {
     group = "publishing"
     dependsOn(tasks.publish)
     from("./build/staging-deploy")
     into("../build/staging-deploy")
 }
 
-val dokkaJavadocJar by tasks.registering(Jar::class) {
+val dokkaJavadocJar = tasks.register<Jar>("dokkaJavadocJar") {
     group = "dokka"
     dependsOn(tasks.dokkaGeneratePublicationJavadoc)
     from(tasks.dokkaGeneratePublicationJavadoc.flatMap { it.outputDirectory })
