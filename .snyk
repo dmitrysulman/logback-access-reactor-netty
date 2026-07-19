@@ -2,3 +2,8 @@
 version: v1.25.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
+   SNYK-JAVA-ORGAPACHELOGGINGLOG4J-17954276:
+     - '*':
+         reason: No upgrade or patch available
+         expires: 2026-08-19T00:00:00.000Z
+         created: 2026-07-19T00:00:00.000Z
