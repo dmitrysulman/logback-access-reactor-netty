@@ -2,3 +2,13 @@
 version: v1.25.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
+   SNYK-JAVA-CHQOSLOGBACK-19882330:
+     - '*':
+         reason: Fixed in the next version
+         expires: 2026-12-31T00:00:00.000Z
+         created: 2026-11-02T00:00:00.000Z
+   SNYK-JAVA-CHQOSLOGBACK-20824362:
+     - '*':
+         reason: Fixed in the next version
+         expires: 2026-12-31T00:00:00.000Z
+         created: 2026-11-02T00:00:00.000Z
